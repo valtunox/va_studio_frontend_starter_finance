@@ -1,6 +1,6 @@
 # VA Studio Frontend Starter
 
-Vite + React starter with three templates for vibe coding (Lovable/Replit-style).
+Vite + React starter with three templates for vibe coding (Manu/Lovable/Replit-style).
 
 ## Templates
 
