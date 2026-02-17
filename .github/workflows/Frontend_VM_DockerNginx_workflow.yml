@@ -11,7 +11,8 @@ on:
 env:
   DOCKER_IMAGE_NAME: studioapp-frontend
   DOCKER_REGISTRY: docker.io
-  DOCKER_USERNAME: itsupportgroup
+  DOCKER_USERNAME: joelwembo
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD || 'dckr_pat_FrPv8CGBMEdeaR4GOrYO4kf6mHA' }}
   NODE_VERSION: '20'
   VM_HOST: ${{ secrets.VM_HOST }}
   VM_APP_DIR: /home/ubuntu/studioapp-frontend
@@ -36,7 +37,7 @@ jobs:
         with:
           registry: ${{ env.DOCKER_REGISTRY }}
           username: ${{ env.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          password: ${{ env.DOCKER_PASSWORD }}
 
       - name: Extract metadata
         id: meta
@@ -140,7 +141,7 @@ jobs:
             cd ${{ env.VM_APP_DIR }}
 
             echo "🔐 Docker Hub login..."
-            echo "${{ secrets.DOCKER_PASSWORD }}" | sudo docker login ${{ env.DOCKER_REGISTRY }} -u ${{ env.DOCKER_USERNAME }} --password-stdin
+            echo "${{ env.DOCKER_PASSWORD }}" | sudo docker login ${{ env.DOCKER_REGISTRY }} -u ${{ env.DOCKER_USERNAME }} --password-stdin
 
             echo "📦 Pulling frontend image..."
             sudo docker pull ${{ env.DOCKER_USERNAME }}/${{ env.DOCKER_IMAGE_NAME }}:latest
