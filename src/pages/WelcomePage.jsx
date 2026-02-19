@@ -16,7 +16,7 @@
  * @see {@link ../App.jsx} for routing
  */
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect, useRef, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { useBackendContext } from '@/context/BackendStatusContext'
 import {
@@ -69,6 +69,11 @@ import {
   UserPlus,
   Compass,
   Target,
+  Sun,
+  Moon,
+  Menu,
+  X,
+  Quote,
 } from 'lucide-react'
 
 /* ------------------------------------------------------------------ */
@@ -451,6 +456,34 @@ const STEPS = [
   { step: '04', title: 'Request & Deploy', description: 'Submit a customization request and get your tailored template.' },
 ]
 
+const GITHUB_URL = 'https://github.com/valtunox/va_studio_frontend_starter'
+
+const TESTIMONIALS = [
+  {
+    name: 'Sarah Chen',
+    role: 'Full-Stack Developer',
+    avatar: 'SC',
+    color: 'from-pink-500 to-rose-500',
+    text: 'VA Studio saved me weeks of work. The AI Assistant template was exactly what I needed — clean code, great structure, and the live preview made it so easy to evaluate.',
+  },
+  {
+    name: 'Marcus Johnson',
+    role: 'Frontend Engineer @ Stripe',
+    avatar: 'MJ',
+    color: 'from-indigo-500 to-violet-500',
+    text: 'I\'ve tried dozens of template libraries. VA Studio stands out with its production-ready quality. The Finance Dashboard template is genuinely better than most paid alternatives.',
+  },
+  {
+    name: 'Aiko Tanaka',
+    role: 'Indie SaaS Founder',
+    avatar: 'AT',
+    color: 'from-emerald-500 to-teal-500',
+    text: 'Launched my SaaS landing page in under an hour using the SaaS template. The Tailwind setup is perfect — I just tweaked the colors and copy and shipped it.',
+  },
+]
+
+const ROTATING_WORDS = ['AI Assistants', 'E-Commerce', 'SaaS Landing', 'Finance Dashboard']
+
 /* ------------------------------------------------------------------ */
 /*  Component                                                          */
 /* ------------------------------------------------------------------ */
@@ -459,7 +492,39 @@ export default function WelcomePage() {
   const [search, setSearch] = useState('')
   const [activeCategory, setActiveCategory] = useState('all')
   const [showStatusPanel, setShowStatusPanel] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [darkMode, setDarkMode] = useState(() => document.documentElement.classList.contains('dark'))
+  const [statsVisible, setStatsVisible] = useState(false)
+  const statsRef = useRef(null)
   const backend = useBackendContext()
+
+  const toggleDarkMode = useCallback(() => {
+    setDarkMode((prev) => {
+      const next = !prev
+      document.documentElement.classList.toggle('dark', next)
+      localStorage.setItem('va-dark-mode', next ? 'dark' : 'light')
+      return next
+    })
+  }, [])
+
+  useEffect(() => {
+    const saved = localStorage.getItem('va-dark-mode')
+    if (saved === 'dark') {
+      document.documentElement.classList.add('dark')
+      setDarkMode(true)
+    }
+  }, [])
+
+  useEffect(() => {
+    const el = statsRef.current
+    if (!el) return
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) setStatsVisible(true) },
+      { threshold: 0.3 }
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
 
   const filtered = useMemo(() => {
     return TEMPLATES.filter((t) => {
@@ -524,9 +589,16 @@ export default function WelcomePage() {
             </a>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={toggleDarkMode}
+              className="p-2 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              title={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
+            >
+              {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+            </button>
             <a
-              href="https://github.com"
+              href={GITHUB_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="p-2 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
@@ -540,8 +612,42 @@ export default function WelcomePage() {
               Get Started
               <ArrowRight className="w-4 h-4" />
             </a>
+            <button
+              onClick={() => setMobileMenuOpen((p) => !p)}
+              className="md:hidden p-2 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+            >
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
           </div>
         </div>
+
+        {/* Mobile Menu */}
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t border-slate-200 dark:border-slate-800 px-4 py-4 space-y-3 bg-white/95 dark:bg-slate-950/95 backdrop-blur-xl">
+            {[
+              { href: '#templates', label: 'Templates' },
+              { href: '#features', label: 'Features' },
+              { href: '#how-it-works', label: 'How It Works' },
+            ].map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className="block text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors py-2"
+              >
+                {link.label}
+              </a>
+            ))}
+            <a
+              href="#templates"
+              onClick={() => setMobileMenuOpen(false)}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-full hover:bg-indigo-700 transition-colors"
+            >
+              Get Started
+              <ArrowRight className="w-4 h-4" />
+            </a>
+          </div>
+        )}
       </nav>
 
       {/* ── Hero ──────────────────────────────────────────────── */}
@@ -568,6 +674,15 @@ export default function WelcomePage() {
               Templates
             </h1>
 
+            {/* Rotating template names */}
+            <div className="h-8 sm:h-10 relative mb-6 overflow-hidden">
+              <div className="hero-rotating-text text-lg sm:text-xl font-semibold text-indigo-600 dark:text-indigo-400">
+                {ROTATING_WORDS.map((word) => (
+                  <span key={word}>{word}</span>
+                ))}
+              </div>
+            </div>
+
             <p className="text-lg sm:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
               Browse 22 beautifully crafted React templates — from AI assistants to finance & marketing.
               Preview live, chat with AI, and deploy your next project in minutes.
@@ -592,16 +707,20 @@ export default function WelcomePage() {
             </div>
 
             {/* Stats */}
-            <div className="flex items-center justify-center gap-8 sm:gap-12 text-center">
+            <div ref={statsRef} className="flex items-center justify-center gap-8 sm:gap-12 text-center">
               {[
                 { value: '22', label: 'Templates' },
                 { value: '100%', label: 'Free & Open' },
                 { value: '0', label: 'Login Required' },
                 { value: 'AI', label: 'Powered Chat' },
-              ].map((stat) => (
-                <div key={stat.label}>
-                  <p className="text-2xl sm:text-3xl font-bold font-display text-slate-900 dark:text-white">{stat.value}</p>
-                  <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">{stat.label}</p>
+              ].map((stat, i) => (
+                <div
+                  key={stat.label}
+                  className={`stat-animate ${statsVisible ? 'stat-visible' : ''}`}
+                  style={{ transitionDelay: `${i * 150}ms` }}
+                >
+                  <p className="text-3xl sm:text-4xl lg:text-5xl font-black font-display bg-gradient-to-br from-indigo-600 to-violet-600 bg-clip-text text-transparent">{stat.value}</p>
+                  <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1 font-medium">{stat.label}</p>
                 </div>
               ))}
             </div>
@@ -749,6 +868,43 @@ export default function WelcomePage() {
         </div>
       </section>
 
+      {/* ── Testimonials ─────────────────────────────────────── */}
+      <section className="py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-14">
+            <h2 className="text-3xl sm:text-4xl font-bold font-display text-slate-900 dark:text-white mb-4">
+              Loved by Developers
+            </h2>
+            <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+              See what developers are saying about VA Studio templates.
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {TESTIMONIALS.map((t) => (
+              <div
+                key={t.name}
+                className="relative p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-indigo-300 dark:hover:border-indigo-700 transition-all hover:shadow-lg"
+              >
+                <Quote className="w-8 h-8 text-indigo-200 dark:text-indigo-900 mb-4" />
+                <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-6">
+                  "{t.text}"
+                </p>
+                <div className="flex items-center gap-3">
+                  <div className={`w-10 h-10 rounded-full bg-gradient-to-br ${t.color} flex items-center justify-center text-white text-sm font-bold`}>
+                    {t.avatar}
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-slate-900 dark:text-white">{t.name}</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">{t.role}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ── CTA ───────────────────────────────────────────────── */}
       <section className="py-24">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -773,7 +929,7 @@ export default function WelcomePage() {
                   <ArrowRight className="w-5 h-5" />
                 </a>
                 <a
-                  href="https://github.com"
+                  href={GITHUB_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 px-8 py-3.5 bg-white/10 text-white font-semibold rounded-full border border-white/20 hover:bg-white/20 transition-all hover:-translate-y-0.5"
@@ -803,10 +959,16 @@ export default function WelcomePage() {
                 Open-source template studio for modern web applications. Built with React and Tailwind CSS.
               </p>
               <div className="flex items-center gap-3">
-                {[Github, Twitter, Mail].map((Icon, i) => (
+                {[
+                  { Icon: Github, href: GITHUB_URL },
+                  { Icon: Twitter, href: '#' },
+                  { Icon: Mail, href: 'mailto:hello@vastudio.dev' },
+                ].map(({ Icon, href }, i) => (
                   <a
                     key={i}
-                    href="#"
+                    href={href}
+                    target={href.startsWith('http') ? '_blank' : undefined}
+                    rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}
                     className="w-9 h-9 rounded-lg bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
                   >
                     <Icon className="w-4 h-4" />

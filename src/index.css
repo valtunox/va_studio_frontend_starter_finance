@@ -49,12 +49,49 @@
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
   * {
     @apply border-border;
   }
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* ── Hero Rotating Text Animation ───────────────────────── */
+@keyframes hero-text-fade {
+  0%, 20% { opacity: 1; transform: translateY(0); }
+  25%, 95% { opacity: 0; transform: translateY(-20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.hero-rotating-text span {
+  display: inline-block;
+  position: absolute;
+  left: 0;
+  right: 0;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: hero-text-fade 8s infinite;
+}
+
+.hero-rotating-text span:nth-child(1) { animation-delay: 0s; }
+.hero-rotating-text span:nth-child(2) { animation-delay: 2s; }
+.hero-rotating-text span:nth-child(3) { animation-delay: 4s; }
+.hero-rotating-text span:nth-child(4) { animation-delay: 6s; }
+
+/* ── Stats Count-Up Animation ───────────────────────────── */
+.stat-animate {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.stat-animate.stat-visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* ── AI Thinking Loader ─────────────────────────────────── */
