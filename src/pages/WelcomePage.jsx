@@ -539,7 +539,7 @@ export default function WelcomePage() {
   }, [search, activeCategory])
 
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-950 font-sans">
+    <div className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 font-sans">
       {/* ── Announcement Bar + Backend Status ────────────────── */}
       <div className="bg-indigo-600 text-white text-sm py-2 px-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -652,10 +652,12 @@ export default function WelcomePage() {
 
       {/* ── Hero ──────────────────────────────────────────────── */}
       <section className="relative overflow-hidden">
-        {/* Background decoration */}
+        {/* Background decoration — rich mesh gradient */}
         <div className="absolute inset-0 -z-10">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-gradient-to-br from-indigo-100 via-violet-50 to-transparent dark:from-indigo-950/50 dark:via-violet-950/30 dark:to-transparent rounded-full blur-3xl opacity-60" />
-          <div className="absolute top-40 right-0 w-72 h-72 bg-gradient-to-br from-pink-100 to-transparent dark:from-pink-950/30 dark:to-transparent rounded-full blur-3xl opacity-40" />
+          <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 via-white to-violet-50 dark:from-indigo-950/40 dark:via-slate-950 dark:to-violet-950/40" />
+          <div className="bg-glow-slow absolute top-0 left-1/4 w-[600px] h-[600px] bg-gradient-to-br from-indigo-200/60 via-violet-100/40 to-transparent dark:from-indigo-800/20 dark:via-violet-900/15 dark:to-transparent rounded-full blur-3xl" />
+          <div className="bg-glow-slower absolute top-20 right-0 w-[500px] h-[500px] bg-gradient-to-bl from-pink-200/50 via-rose-100/30 to-transparent dark:from-pink-900/20 dark:via-rose-950/15 dark:to-transparent rounded-full blur-3xl" />
+          <div className="bg-glow-slow absolute bottom-0 left-1/2 -translate-x-1/2 w-[700px] h-[300px] bg-gradient-to-t from-blue-100/40 to-transparent dark:from-blue-950/20 dark:to-transparent rounded-full blur-3xl" />
         </div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16 sm:pt-28 sm:pb-24">
@@ -729,7 +731,7 @@ export default function WelcomePage() {
       </section>
 
       {/* ── Features ──────────────────────────────────────────── */}
-      <section id="features" className="py-20 bg-slate-50 dark:bg-slate-900/50">
+      <section id="features" className="py-20 relative bg-gradient-to-br from-slate-50 via-indigo-50/30 to-violet-50/20 dark:from-slate-900/80 dark:via-indigo-950/30 dark:to-violet-950/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14">
             <h2 className="text-3xl sm:text-4xl font-bold font-display text-slate-900 dark:text-white mb-4">
@@ -758,7 +760,7 @@ export default function WelcomePage() {
       </section>
 
       {/* ── Template Gallery ──────────────────────────────────── */}
-      <section id="templates" className="py-20">
+      <section id="templates" className="py-20 relative bg-gradient-to-b from-white via-slate-50/50 to-white dark:from-slate-950 dark:via-slate-900/50 dark:to-slate-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold font-display text-slate-900 dark:text-white mb-4">
@@ -840,7 +842,7 @@ export default function WelcomePage() {
       </section>
 
       {/* ── How It Works ──────────────────────────────────────── */}
-      <section id="how-it-works" className="py-20 bg-slate-50 dark:bg-slate-900/50">
+      <section id="how-it-works" className="py-20 relative bg-gradient-to-br from-violet-50/40 via-slate-50 to-indigo-50/30 dark:from-violet-950/20 dark:via-slate-900/60 dark:to-indigo-950/20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14">
             <h2 className="text-3xl sm:text-4xl font-bold font-display text-slate-900 dark:text-white mb-4">
@@ -869,7 +871,7 @@ export default function WelcomePage() {
       </section>
 
       {/* ── Testimonials ─────────────────────────────────────── */}
-      <section className="py-20">
+      <section className="py-20 relative bg-gradient-to-b from-white via-pink-50/20 to-white dark:from-slate-950 dark:via-pink-950/10 dark:to-slate-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14">
             <h2 className="text-3xl sm:text-4xl font-bold font-display text-slate-900 dark:text-white mb-4">
@@ -944,7 +946,7 @@ export default function WelcomePage() {
       </section>
 
       {/* ── Footer ────────────────────────────────────────────── */}
-      <footer className="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950">
+      <footer className="border-t border-slate-200 dark:border-slate-800 bg-gradient-to-b from-slate-50 to-white dark:from-slate-900 dark:to-slate-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
             {/* Brand */}
