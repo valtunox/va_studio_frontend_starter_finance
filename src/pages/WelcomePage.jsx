@@ -1,16 +1,18 @@
 /**
- * WelcomePage — VA Studio Template Gallery & Landing Page
+ * WelcomePage — VA Studio Landing Page & Template Gallery
  *
- * The public entry point for VA Studio. No login required.
+ * Modern SaaS landing page inspired by Lovable.dev, Bolt.new, v0.dev.
  *
  * Sections:
- *   1. Hero with animated gradient + tagline
- *   2. Feature highlights (why VA Studio)
- *   3. Template gallery with category filters + search
- *   4. How-it-works steps
- *   5. CTA / footer
- *
- * Each template card links to /preview/:templateId for live preview.
+ *   1. Hero with dramatic gradient, prompt input, social proof
+ *   2. "What Will You Build?" use-case cards
+ *   3. Feature highlights
+ *   4. Template gallery with category filters + search
+ *   5. How-it-works steps
+ *   6. Testimonials
+ *   7. CTA
+ *   8. Footer
+ *   + Floating AI chatbot
  *
  * @module WelcomePage
  * @see {@link ../App.jsx} for routing
@@ -484,6 +486,24 @@ const TESTIMONIALS = [
 
 const ROTATING_WORDS = ['AI Assistants', 'E-Commerce', 'SaaS Landing', 'Finance Dashboard']
 
+const USE_CASES = [
+  { icon: LayoutDashboard, title: 'SaaS Dashboard', description: 'Analytics, metrics, and admin panels for your SaaS product.', templateId: 'dashboard' },
+  { icon: ShoppingCart, title: 'E-Commerce Store', description: 'Full storefront with cart, checkout, and product management.', templateId: 'ecommerce' },
+  { icon: Bot, title: 'AI Chatbot', description: 'Conversational AI interface with multi-agent support.', templateId: 'aiassistant' },
+  { icon: Briefcase, title: 'Portfolio Site', description: 'Showcase your work with a stunning developer portfolio.', templateId: 'portfolio' },
+  { icon: Rocket, title: 'SaaS Landing Page', description: 'High-converting landing page with pricing and testimonials.', templateId: 'saas' },
+  { icon: Landmark, title: 'Finance App', description: 'Portfolio tracking, budgets, and financial analytics.', templateId: 'finance' },
+  { icon: Users, title: 'CRM Platform', description: 'Manage contacts, deals, and customer relationships.', templateId: 'crm' },
+  { icon: Megaphone, title: 'Marketing Hub', description: 'Campaign analytics, email metrics, and content calendar.', templateId: 'marketing' },
+]
+
+const CHATBOT_MESSAGES = [
+  { from: 'bot', text: 'Hey! 👋 I\'m VA Studio AI. I can help you find the perfect template for your project.' },
+  { from: 'bot', text: 'What kind of app are you building? I\'ll recommend the best starting point.' },
+  { from: 'user', text: 'I need a SaaS dashboard with analytics' },
+  { from: 'bot', text: 'Great choice! I\'d recommend our Analytics Dashboard template — it comes with KPI sparklines, revenue charts, and a clean data table. Want me to show you a preview?' },
+]
+
 /* ------------------------------------------------------------------ */
 /*  Component                                                          */
 /* ------------------------------------------------------------------ */
@@ -495,6 +515,7 @@ export default function WelcomePage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [darkMode, setDarkMode] = useState(() => document.documentElement.classList.contains('dark'))
   const [statsVisible, setStatsVisible] = useState(false)
+  const [chatOpen, setChatOpen] = useState(false)
   const statsRef = useRef(null)
   const backend = useBackendContext()
 
@@ -541,12 +562,12 @@ export default function WelcomePage() {
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950 font-sans">
       {/* ── Announcement Bar + Backend Status ────────────────── */}
-      <div className="bg-indigo-600 text-white text-sm py-2 px-4">
+      <div className="bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 text-white text-sm py-2 px-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <span className="inline-flex items-center gap-2">
             <Sparkles className="w-4 h-4" />
             <span className="font-medium">VA Studio v1.0</span>
-            <span className="hidden sm:inline">— 22 production-ready templates, zero login required.</span>
+            <span className="hidden sm:inline">— Build production-ready apps with AI + templates.</span>
             <a href="#templates" className="underline underline-offset-2 hover:text-indigo-200 ml-1">
               Explore now →
             </a>
@@ -561,10 +582,10 @@ export default function WelcomePage() {
       )}
 
       {/* ── Navbar ────────────────────────────────────────────── */}
-      <nav className="sticky top-0 z-50 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800">
+      <nav className="sticky top-0 z-50 bg-white/70 dark:bg-slate-950/70 backdrop-blur-2xl border-b border-slate-200/50 dark:border-slate-800/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-600 to-violet-600 flex items-center justify-center shadow-lg shadow-indigo-600/25">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-600/25">
               <Code2 className="w-5 h-5 text-white" />
             </div>
             <div>
@@ -577,14 +598,14 @@ export default function WelcomePage() {
             </div>
           </Link>
 
-          <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600 dark:text-slate-400">
-            <a href="#templates" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+          <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-500 dark:text-slate-400">
+            <a href="#templates" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200">
               Templates
             </a>
-            <a href="#features" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+            <a href="#features" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200">
               Features
             </a>
-            <a href="#how-it-works" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+            <a href="#how-it-works" className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors duration-200">
               How It Works
             </a>
           </div>
@@ -592,7 +613,7 @@ export default function WelcomePage() {
           <div className="flex items-center gap-2">
             <button
               onClick={toggleDarkMode}
-              className="p-2 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              className="p-2 rounded-lg text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
               title={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
             >
               {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
@@ -601,15 +622,21 @@ export default function WelcomePage() {
               href={GITHUB_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="p-2 rounded-lg text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              className="p-2 rounded-lg text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
             >
               <Github className="w-5 h-5" />
             </a>
             <a
-              href="#templates"
-              className="hidden sm:inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-full hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-600/25"
+              href="#"
+              className="hidden md:inline-flex items-center text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors px-3 py-2"
             >
-              Get Started
+              Sign In
+            </a>
+            <a
+              href="#"
+              className="hidden sm:inline-flex items-center gap-2 px-5 py-2 bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 text-white text-sm font-semibold rounded-full hover:shadow-lg hover:shadow-indigo-600/25 transition-all hover:-translate-y-0.5"
+            >
+              Start Free Trial
               <ArrowRight className="w-4 h-4" />
             </a>
             <button
@@ -638,40 +665,51 @@ export default function WelcomePage() {
                 {link.label}
               </a>
             ))}
-            <a
-              href="#templates"
-              onClick={() => setMobileMenuOpen(false)}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-full hover:bg-indigo-700 transition-colors"
-            >
-              Get Started
-              <ArrowRight className="w-4 h-4" />
-            </a>
+            <div className="pt-3 border-t border-slate-200 dark:border-slate-800 flex flex-col gap-2">
+              <a
+                href="#"
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors py-2"
+              >
+                Sign In
+              </a>
+              <a
+                href="#"
+                onClick={() => setMobileMenuOpen(false)}
+                className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 text-white text-sm font-semibold rounded-full hover:shadow-lg transition-all"
+              >
+                Start Free Trial
+                <ArrowRight className="w-4 h-4" />
+              </a>
+            </div>
           </div>
         )}
       </nav>
 
       {/* ── Hero ──────────────────────────────────────────────── */}
       <section className="relative overflow-hidden">
-        {/* Background decoration */}
+        {/* Dramatic animated gradient background */}
         <div className="absolute inset-0 -z-10">
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] bg-gradient-to-br from-indigo-100 via-violet-50 to-transparent dark:from-indigo-950/50 dark:via-violet-950/30 dark:to-transparent rounded-full blur-3xl opacity-60" />
-          <div className="absolute top-40 right-0 w-72 h-72 bg-gradient-to-br from-pink-100 to-transparent dark:from-pink-950/30 dark:to-transparent rounded-full blur-3xl opacity-40" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[800px] bg-gradient-to-br from-indigo-200 via-violet-100 to-purple-200 dark:from-indigo-950/80 dark:via-violet-950/60 dark:to-purple-950/40 rounded-full blur-3xl opacity-50 animate-pulse" />
+          <div className="absolute top-20 -right-20 w-96 h-96 bg-gradient-to-br from-pink-200 via-fuchsia-100 to-transparent dark:from-pink-950/40 dark:via-fuchsia-950/20 dark:to-transparent rounded-full blur-3xl opacity-40" />
+          <div className="absolute top-60 -left-20 w-80 h-80 bg-gradient-to-br from-blue-200 to-transparent dark:from-blue-950/30 dark:to-transparent rounded-full blur-3xl opacity-30" />
+          {/* Dot grid pattern */}
+          <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05]" style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, currentColor 1px, transparent 0)', backgroundSize: '32px 32px' }} />
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16 sm:pt-28 sm:pb-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16 sm:pt-32 sm:pb-28">
           <div className="text-center max-w-4xl mx-auto">
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-50 dark:bg-indigo-950/50 border border-indigo-200 dark:border-indigo-800 text-sm text-indigo-700 dark:text-indigo-300 font-medium mb-8">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-50/80 dark:bg-indigo-950/50 border border-indigo-200/50 dark:border-indigo-800/50 text-sm text-indigo-700 dark:text-indigo-300 font-medium mb-8 backdrop-blur-sm">
               <Sparkles className="w-4 h-4" />
-              Open-Source Template Studio
+              AI-Powered Template Studio
             </div>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black font-display text-slate-900 dark:text-white tracking-tight leading-[1.1] mb-6">
-              Build Faster with{' '}
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black font-display text-slate-900 dark:text-white tracking-tight leading-[1.05] mb-6">
+              Turn Ideas into Apps.{' '}
               <span className="bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 bg-clip-text text-transparent">
-                Production-Ready
-              </span>{' '}
-              Templates
+                With AI.
+              </span>
             </h1>
 
             {/* Rotating template names */}
@@ -684,26 +722,58 @@ export default function WelcomePage() {
             </div>
 
             <p className="text-lg sm:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto mb-10 leading-relaxed">
-              Browse 22 beautifully crafted React templates — from AI assistants to finance & marketing.
-              Preview live, chat with AI, and deploy your next project in minutes.
+              VA Studio helps vibe coders ship faster. Pick a template, customize with AI, and deploy production-ready web apps in minutes — not months.
             </p>
 
+            {/* Prompt Input (cosmetic) */}
+            <div className="max-w-2xl mx-auto mb-8">
+              <div className="relative group">
+                <div className="absolute -inset-1 bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 rounded-2xl opacity-20 group-hover:opacity-30 blur transition-opacity" />
+                <div className="relative flex items-center bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-xl shadow-slate-200/50 dark:shadow-slate-900/50 p-2">
+                  <Sparkles className="w-5 h-5 text-indigo-500 ml-4 mr-3 flex-shrink-0" />
+                  <input
+                    type="text"
+                    placeholder="What do you want to build?"
+                    className="flex-1 bg-transparent text-slate-900 dark:text-white placeholder:text-slate-400 text-base py-3 focus:outline-none"
+                    readOnly
+                  />
+                  <button className="px-6 py-3 bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 text-white text-sm font-semibold rounded-xl hover:shadow-lg hover:shadow-indigo-600/25 transition-all flex-shrink-0">
+                    Build with AI
+                  </button>
+                </div>
+              </div>
+            </div>
+
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
               <a
                 href="#templates"
-                className="inline-flex items-center gap-2 px-8 py-3.5 bg-indigo-600 text-white font-semibold rounded-full hover:bg-indigo-700 transition-all shadow-xl shadow-indigo-600/25 hover:shadow-indigo-600/40 hover:-translate-y-0.5"
+                className="inline-flex items-center gap-2 px-8 py-3.5 bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 text-white font-semibold rounded-full hover:shadow-xl hover:shadow-indigo-600/30 transition-all hover:-translate-y-0.5"
               >
-                Browse Templates
+                Start Building — it's free
                 <ArrowRight className="w-5 h-5" />
               </a>
               <a
                 href="#how-it-works"
-                className="inline-flex items-center gap-2 px-8 py-3.5 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-300 font-semibold rounded-full border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 transition-all hover:-translate-y-0.5"
+                className="inline-flex items-center gap-2 px-8 py-3.5 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm text-slate-700 dark:text-slate-300 font-semibold rounded-full border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 transition-all hover:-translate-y-0.5"
               >
-                How It Works
-                <ChevronRight className="w-5 h-5" />
+                <Eye className="w-5 h-5" />
+                Watch Demo
               </a>
+            </div>
+
+            {/* Social Proof */}
+            <div className="flex items-center justify-center gap-3 mb-16">
+              <div className="flex -space-x-2">
+                {['from-pink-500 to-rose-500', 'from-indigo-500 to-violet-500', 'from-emerald-500 to-teal-500', 'from-amber-500 to-orange-500', 'from-cyan-500 to-blue-500'].map((gradient, i) => (
+                  <div key={i} className={`w-8 h-8 rounded-full bg-gradient-to-br ${gradient} border-2 border-white dark:border-slate-950 flex items-center justify-center text-white text-[10px] font-bold`}>
+                    {['S', 'M', 'A', 'J', 'K'][i]}
+                  </div>
+                ))}
+              </div>
+              <p className="text-sm text-slate-500 dark:text-slate-400">
+                Trusted by <span className="font-semibold text-slate-700 dark:text-slate-300">10,000+</span> developers
+              </p>
             </div>
 
             {/* Stats */}
@@ -719,7 +789,7 @@ export default function WelcomePage() {
                   className={`stat-animate ${statsVisible ? 'stat-visible' : ''}`}
                   style={{ transitionDelay: `${i * 150}ms` }}
                 >
-                  <p className="text-3xl sm:text-4xl lg:text-5xl font-black font-display bg-gradient-to-br from-indigo-600 to-violet-600 bg-clip-text text-transparent">{stat.value}</p>
+                  <p className="text-3xl sm:text-4xl lg:text-5xl font-black font-display bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-600 bg-clip-text text-transparent">{stat.value}</p>
                   <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1 font-medium">{stat.label}</p>
                 </div>
               ))}
@@ -728,8 +798,41 @@ export default function WelcomePage() {
         </div>
       </section>
 
+      {/* ── What Will You Build? ──────────────────────────────── */}
+      <section className="py-20 bg-slate-50/50 dark:bg-slate-900/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-14">
+            <h2 className="text-3xl sm:text-4xl font-bold font-display text-slate-900 dark:text-white mb-4">
+              What Will You Build?
+            </h2>
+            <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+              From dashboards to storefronts — pick a use case and start building in minutes.
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {USE_CASES.map((uc) => (
+              <Link
+                key={uc.templateId}
+                to={`/preview/${uc.templateId}`}
+                className="group relative p-6 rounded-2xl bg-white/70 dark:bg-slate-900/70 backdrop-blur-sm border border-slate-200/50 dark:border-slate-800/50 hover:border-indigo-300 dark:hover:border-indigo-700 transition-all hover:shadow-xl hover:shadow-indigo-600/5 hover:-translate-y-1"
+              >
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-100 to-violet-100 dark:from-indigo-950/50 dark:to-violet-950/50 flex items-center justify-center mb-4 group-hover:from-indigo-200 group-hover:to-violet-200 dark:group-hover:from-indigo-900/50 dark:group-hover:to-violet-900/50 transition-colors">
+                  <uc.icon className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
+                </div>
+                <h3 className="text-base font-bold font-display text-slate-900 dark:text-white mb-1.5">{uc.title}</h3>
+                <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">{uc.description}</p>
+                <div className="mt-4 inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 dark:text-indigo-400 opacity-0 group-hover:opacity-100 transition-opacity">
+                  View Template <ArrowRight className="w-3 h-3" />
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ── Features ──────────────────────────────────────────── */}
-      <section id="features" className="py-20 bg-slate-50 dark:bg-slate-900/50">
+      <section id="features" className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14">
             <h2 className="text-3xl sm:text-4xl font-bold font-display text-slate-900 dark:text-white mb-4">
@@ -744,9 +847,9 @@ export default function WelcomePage() {
             {FEATURES.map((f) => (
               <div
                 key={f.title}
-                className="group p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-indigo-300 dark:hover:border-indigo-700 transition-all hover:shadow-lg hover:-translate-y-1"
+                className="group p-6 rounded-2xl bg-white/70 dark:bg-slate-900/70 backdrop-blur-sm border border-slate-200/50 dark:border-slate-800/50 hover:border-indigo-300 dark:hover:border-indigo-700 transition-all hover:shadow-xl hover:shadow-indigo-600/5 hover:-translate-y-1"
               >
-                <div className="w-12 h-12 rounded-xl bg-indigo-50 dark:bg-indigo-950/50 flex items-center justify-center mb-4 group-hover:bg-indigo-100 dark:group-hover:bg-indigo-900/50 transition-colors">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-50 to-violet-50 dark:from-indigo-950/50 dark:to-violet-950/50 flex items-center justify-center mb-4 group-hover:from-indigo-100 group-hover:to-violet-100 dark:group-hover:from-indigo-900/50 dark:group-hover:to-violet-900/50 transition-colors">
                   <f.icon className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
                 </div>
                 <h3 className="text-lg font-bold font-display text-slate-900 dark:text-white mb-2">{f.title}</h3>
@@ -758,7 +861,7 @@ export default function WelcomePage() {
       </section>
 
       {/* ── Template Gallery ──────────────────────────────────── */}
-      <section id="templates" className="py-20">
+      <section id="templates" className="py-20 bg-slate-50/50 dark:bg-slate-900/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl sm:text-4xl font-bold font-display text-slate-900 dark:text-white mb-4">
@@ -793,8 +896,8 @@ export default function WelcomePage() {
                     onClick={() => setActiveCategory(cat.id)}
                     className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all ${
                       isActive
-                        ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/25'
-                        : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-700'
+                        ? 'bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 text-white shadow-lg shadow-indigo-600/25'
+                        : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200/50 dark:border-slate-700/50'
                     }`}
                   >
                     <cat.icon className="w-4 h-4" />
@@ -840,14 +943,14 @@ export default function WelcomePage() {
       </section>
 
       {/* ── How It Works ──────────────────────────────────────── */}
-      <section id="how-it-works" className="py-20 bg-slate-50 dark:bg-slate-900/50">
+      <section id="how-it-works" className="py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14">
             <h2 className="text-3xl sm:text-4xl font-bold font-display text-slate-900 dark:text-white mb-4">
               How It Works
             </h2>
             <p className="text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-              From browsing to deployment in four simple steps.
+              From idea to deployment in four simple steps.
             </p>
           </div>
 
@@ -857,7 +960,7 @@ export default function WelcomePage() {
                 {i < STEPS.length - 1 && (
                   <div className="hidden lg:block absolute top-8 left-full w-full h-px bg-gradient-to-r from-indigo-300 to-transparent dark:from-indigo-700" />
                 )}
-                <div className="text-4xl font-black font-display text-indigo-100 dark:text-indigo-950 mb-4">
+                <div className="text-4xl font-black font-display bg-gradient-to-br from-indigo-200 to-violet-200 dark:from-indigo-900 dark:to-violet-900 bg-clip-text text-transparent mb-4">
                   {s.step}
                 </div>
                 <h3 className="text-lg font-bold font-display text-slate-900 dark:text-white mb-2">{s.title}</h3>
@@ -869,7 +972,7 @@ export default function WelcomePage() {
       </section>
 
       {/* ── Testimonials ─────────────────────────────────────── */}
-      <section className="py-20">
+      <section className="py-20 bg-slate-50/50 dark:bg-slate-900/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-14">
             <h2 className="text-3xl sm:text-4xl font-bold font-display text-slate-900 dark:text-white mb-4">
@@ -884,7 +987,7 @@ export default function WelcomePage() {
             {TESTIMONIALS.map((t) => (
               <div
                 key={t.name}
-                className="relative p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-indigo-300 dark:hover:border-indigo-700 transition-all hover:shadow-lg"
+                className="relative p-6 rounded-2xl bg-white/70 dark:bg-slate-900/70 backdrop-blur-sm border border-slate-200/50 dark:border-slate-800/50 hover:border-indigo-300 dark:hover:border-indigo-700 transition-all hover:shadow-xl hover:shadow-indigo-600/5"
               >
                 <Quote className="w-8 h-8 text-indigo-200 dark:text-indigo-900 mb-4" />
                 <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed mb-6">
@@ -912,20 +1015,21 @@ export default function WelcomePage() {
             {/* Decorative circles */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2" />
             <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/5 rounded-full translate-y-1/2 -translate-x-1/2" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
 
             <div className="relative z-10">
               <h2 className="text-3xl sm:text-4xl font-bold font-display text-white mb-4">
-                Ready to Build Something Amazing?
+                Ready to Build Something Magical?
               </h2>
               <p className="text-lg text-white/80 max-w-xl mx-auto mb-8">
-                Pick a template, preview it live, and start building your next project today. All 22 templates are loaded dynamically via React.lazy + code-splitting.
+                Pick a template, let AI customize it, and ship your next project today. Join 10,000+ developers already building with VA Studio.
               </p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <a
                   href="#templates"
                   className="inline-flex items-center gap-2 px-8 py-3.5 bg-white text-indigo-700 font-semibold rounded-full hover:bg-indigo-50 transition-all shadow-xl hover:-translate-y-0.5"
                 >
-                  Browse Templates
+                  Start Building — it's free
                   <ArrowRight className="w-5 h-5" />
                 </a>
                 <a
@@ -944,19 +1048,19 @@ export default function WelcomePage() {
       </section>
 
       {/* ── Footer ────────────────────────────────────────────── */}
-      <footer className="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950">
+      <footer className="border-t border-slate-200/50 dark:border-slate-800/50 bg-white dark:bg-slate-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
             {/* Brand */}
             <div className="sm:col-span-2 lg:col-span-1">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-600 to-violet-600 flex items-center justify-center">
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-600 via-violet-600 to-purple-600 flex items-center justify-center">
                   <Code2 className="w-5 h-5 text-white" />
                 </div>
                 <span className="text-lg font-bold font-display text-slate-900 dark:text-white">VA Studio</span>
               </div>
               <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-4">
-                Open-source template studio for modern web applications. Built with React and Tailwind CSS.
+                AI-powered template studio for modern web applications. Built with React and Tailwind CSS.
               </p>
               <div className="flex items-center gap-3">
                 {[
@@ -998,7 +1102,7 @@ export default function WelcomePage() {
             <div>
               <h4 className="text-sm font-bold text-slate-900 dark:text-white mb-4 uppercase tracking-wider">More</h4>
               <ul className="space-y-2.5">
-                {TEMPLATES.slice(5).map((t) => (
+                {TEMPLATES.slice(5, 10).map((t) => (
                   <li key={t.id}>
                     <Link
                       to={`/preview/${t.id}`}
@@ -1025,6 +1129,16 @@ export default function WelcomePage() {
                     </a>
                   </li>
                 ))}
+                <li className="pt-2 border-t border-slate-200 dark:border-slate-800">
+                  <a href="#" className="text-sm text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+                    Sign In
+                  </a>
+                </li>
+                <li>
+                  <a href="#" className="text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors">
+                    Start Free Trial →
+                  </a>
+                </li>
               </ul>
             </div>
           </div>
@@ -1040,6 +1154,71 @@ export default function WelcomePage() {
           </div>
         </div>
       </footer>
+
+      {/* ── Floating AI Chatbot ───────────────────────────────── */}
+      <div className="fixed bottom-6 right-6 z-50">
+        {/* Chat Panel */}
+        {chatOpen && (
+          <div className="mb-4 w-80 sm:w-96 bg-white dark:bg-slate-900 rounded-2xl shadow-2xl shadow-indigo-600/10 border border-slate-200 dark:border-slate-800 overflow-hidden animate-in">
+            {/* Header */}
+            <div className="px-5 py-4 bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
+                  <Bot className="w-4 h-4 text-white" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-white">VA Studio AI</p>
+                  <p className="text-xs text-white/70">Always online</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setChatOpen(false)}
+                className="p-1 rounded-lg hover:bg-white/10 transition-colors text-white/70 hover:text-white"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Messages */}
+            <div className="p-4 h-72 overflow-y-auto space-y-3">
+              {CHATBOT_MESSAGES.map((msg, i) => (
+                <div key={i} className={`flex ${msg.from === 'user' ? 'justify-end' : 'justify-start'}`}>
+                  <div className={`max-w-[80%] px-4 py-2.5 rounded-2xl text-sm leading-relaxed ${
+                    msg.from === 'user'
+                      ? 'bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-br-md'
+                      : 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-bl-md'
+                  }`}>
+                    {msg.text}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Input */}
+            <div className="p-4 border-t border-slate-200 dark:border-slate-800">
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  placeholder="Ask VA Studio AI..."
+                  className="flex-1 px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  readOnly
+                />
+                <button className="p-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white hover:shadow-lg transition-all flex-shrink-0">
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Floating Button */}
+        <button
+          onClick={() => setChatOpen((p) => !p)}
+          className="w-14 h-14 rounded-full bg-gradient-to-r from-indigo-600 via-violet-600 to-purple-600 text-white shadow-xl shadow-indigo-600/30 hover:shadow-indigo-600/50 hover:scale-105 transition-all flex items-center justify-center"
+        >
+          {chatOpen ? <X className="w-6 h-6" /> : <MessageCircle className="w-6 h-6" />}
+        </button>
+      </div>
     </div>
   )
 }
