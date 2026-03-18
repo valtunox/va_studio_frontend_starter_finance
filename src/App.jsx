@@ -22,7 +22,7 @@
 import { lazy, Suspense } from 'react'
 import { createBrowserRouter, RouterProvider, useParams, Link } from 'react-router-dom'
 import { BackendStatusProvider, useBackendContext } from './context/BackendStatusContext'
-import { ThemeProvider } from './context/ThemeContext'
+import { ThemeProvider, useTheme } from './context/ThemeContext'
 
 /* ------------------------------------------------------------------ */
 /*  Default E-commerce Template (main app interface)                   */
@@ -36,7 +36,9 @@ const EcommerceApp = lazy(() => import('../templates/ecommerce/App.jsx'))
 
 const templates = {
   aiassistant: lazy(() => import('../templates/aiassistant/App.jsx')),
+  business: lazy(() => import('../templates/business/App.jsx')),
   ecommerce: lazy(() => import('../templates/ecommerce/App.jsx')),
+  organization: lazy(() => import('../templates/organization/App.jsx')),
   portfolio: lazy(() => import('../templates/portfolio/App.jsx')),
   blog: lazy(() => import('../templates/blog/App.jsx')),
   crm: lazy(() => import('../templates/crm/App.jsx')),
@@ -123,13 +125,14 @@ function ConnectivityBanner() {
 /* ------------------------------------------------------------------ */
 
 function HomePage() {
+  const { isDark } = useTheme()
   return (
-    <>
+    <div className={isDark ? 'dark' : ''}>
       <ConnectivityBanner />
       <Suspense fallback={<TemplateLoader />}>
         <EcommerceApp />
       </Suspense>
-    </>
+    </div>
   )
 }
 
@@ -152,8 +155,9 @@ function TemplateLoader() {
 }
 
 function NotFoundPage() {
+  const { isDark } = useTheme()
   return (
-    <>
+    <div className={isDark ? 'dark' : ''}>
       <ConnectivityBanner />
       <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 px-6">
         <div className="text-center max-w-2xl">
@@ -162,7 +166,7 @@ function NotFoundPage() {
           <p className="text-slate-500 dark:text-slate-400 mb-8">
             The page you're looking for doesn't exist.
           </p>
-          
+
           <div className="mb-8">
             <h2 className="text-lg font-semibold text-slate-900 dark:text-white mb-4">Browse Templates:</h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 text-sm">
@@ -186,17 +190,18 @@ function NotFoundPage() {
           </Link>
         </div>
       </div>
-    </>
+    </div>
   )
 }
 
 function TemplatePreview() {
   const { templateId } = useParams()
+  const { isDark } = useTheme()
   const Component = templates[templateId]
 
   if (!Component) {
     return (
-      <>
+      <div className={isDark ? 'dark' : ''}>
         <ConnectivityBanner />
         <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 px-6">
           <div className="text-center max-w-2xl">
@@ -229,14 +234,16 @@ function TemplatePreview() {
             </Link>
           </div>
         </div>
-      </>
+      </div>
     )
   }
 
   return (
-    <Suspense fallback={<TemplateLoader />}>
-      <Component />
-    </Suspense>
+    <div className={isDark ? 'dark' : ''}>
+      <Suspense fallback={<TemplateLoader />}>
+        <Component />
+      </Suspense>
+    </div>
   )
 }
 

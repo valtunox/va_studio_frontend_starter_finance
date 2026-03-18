@@ -17,6 +17,7 @@ import { Badge } from '@/components/ui/badge'
 import { Tabs, TabContent } from '@/components/ui/tabs'
 import { Progress } from '@/components/ui/progress'
 import { CommandPalette } from '@/components/shared/CommandPalette'
+import { useTheme } from '@/context/ThemeContext'
 
 /* ------------------------------------------------------------------ */
 /*  SIDEBAR DATA                                                       */
@@ -264,6 +265,18 @@ const upcomingReviews = [
   { name: 'Jessica Brown', role: 'Account Executive', reviewDate: 'Mar 07, 2026', rating: 3.9 },
 ]
 
+const supplierRiskBoard = [
+  { supplier: 'Meridian Components', category: 'Chips', risk: 72, etaVariance: '+4 days', status: 'high' },
+  { supplier: 'Nordic Precision AB', category: 'Bearing', risk: 44, etaVariance: '+1 day', status: 'medium' },
+  { supplier: 'Quantum Devices Inc', category: 'Sensors', risk: 28, etaVariance: 'On time', status: 'low' },
+]
+
+const plantUtilization = [
+  { unit: 'Assembly Line A', usage: 88, output: '1,240 units/wk' },
+  { unit: 'Assembly Line B', usage: 93, output: '1,410 units/wk' },
+  { unit: 'QA Cell', usage: 76, output: '910 checks/day' },
+]
+
 /* ------------------------------------------------------------------ */
 /*  COMMAND PALETTE ITEMS                                              */
 /* ------------------------------------------------------------------ */
@@ -330,6 +343,7 @@ function App() {
   const [orderFilter, setOrderFilter] = useState('all')
   const [cmdOpen, setCmdOpen] = useState(false)
   const [orgSwitcherOpen, setOrgSwitcherOpen] = useState(false)
+  const { isDark } = useTheme()
 
   const mainTabs = [
     { id: 'overview', label: 'Overview' },
@@ -374,10 +388,11 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans">
+    <div className={isDark ? 'dark' : ''}>
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans">
 
-      {/* ---- SIDEBAR ---- */}
-      <aside className={`fixed left-0 top-0 h-full ${sidebarWidth} bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 z-40 transform transition-all duration-200 lg:translate-x-0 overflow-y-auto ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        {/* ---- SIDEBAR ---- */}
+        <aside className={`fixed left-0 top-0 h-full ${sidebarWidth} bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 z-40 transform transition-all duration-200 lg:translate-x-0 overflow-y-auto ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         {/* Org Switcher */}
         <div className="p-4 border-b border-slate-200 dark:border-slate-800 sticky top-0 bg-white dark:bg-slate-900 z-10">
           <div className="flex items-center justify-between">
@@ -454,10 +469,10 @@ function App() {
             </div>
           ))}
         </div>
-      </aside>
+        </aside>
 
-      {/* ---- MAIN CONTENT ---- */}
-      <div className={`${mainPadding} transition-all duration-200`}>
+        {/* ---- MAIN CONTENT ---- */}
+        <div className={`${mainPadding} transition-all duration-200`}>
         {/* Header */}
         <header className="sticky top-0 h-14 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-6 z-30">
           <div className="flex items-center gap-4">
@@ -665,6 +680,57 @@ function App() {
                         </div>
                       ))}
                     </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              <div className="grid lg:grid-cols-3 gap-6">
+                <Card className="lg:col-span-2 border-slate-200 dark:border-slate-800">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="font-display">Supplier Risk Board</CardTitle>
+                      <Badge variant="warning">Procurement</Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    {supplierRiskBoard.map((item) => (
+                      <div key={item.supplier} className="rounded-lg border border-slate-200 dark:border-slate-800 p-4">
+                        <div className="flex items-center justify-between gap-3">
+                          <div>
+                            <p className="text-sm font-semibold">{item.supplier}</p>
+                            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{item.category}</p>
+                          </div>
+                          <Badge variant={item.status === 'high' ? 'error' : item.status === 'medium' ? 'warning' : 'success'}>
+                            {item.status}
+                          </Badge>
+                        </div>
+                        <div className="mt-3">
+                          <Progress value={item.risk} max={100} size="sm" color={item.status === 'high' ? 'bg-red-500' : item.status === 'medium' ? 'bg-amber-500' : 'bg-emerald-500'} />
+                        </div>
+                        <div className="flex items-center justify-between mt-2 text-xs text-slate-500 dark:text-slate-400">
+                          <span>{item.risk}% risk score</span>
+                          <span>ETA variance: {item.etaVariance}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </CardContent>
+                </Card>
+
+                <Card className="border-slate-200 dark:border-slate-800">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-base font-display">Plant Utilization</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {plantUtilization.map((line) => (
+                      <div key={line.unit}>
+                        <div className="flex items-center justify-between text-sm mb-1.5">
+                          <span className="font-medium">{line.unit}</span>
+                          <span className="text-slate-500 dark:text-slate-400">{line.usage}%</span>
+                        </div>
+                        <Progress value={line.usage} max={100} size="sm" color={line.usage > 90 ? 'bg-red-500' : line.usage > 80 ? 'bg-amber-500' : 'bg-emerald-500'} />
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">{line.output}</p>
+                      </div>
+                    ))}
                   </CardContent>
                 </Card>
               </div>
@@ -1180,23 +1246,24 @@ function App() {
             </div>
           </TabContent>
         </main>
+        </div>
+
+        {/* Mobile Sidebar Overlay */}
+        {sidebarOpen && (
+          <div className="fixed inset-0 bg-black/40 z-30 lg:hidden" onClick={() => setSidebarOpen(false)} />
+        )}
+
+        {/* Command Palette */}
+        <CommandPalette
+          items={commandItems}
+          isOpen={cmdOpen}
+          onClose={() => setCmdOpen(false)}
+          onSelect={handleCommandSelect}
+        />
+
+        {/* Theme Switcher */}
+        <ThemeSwitcher position="bottom-right" />
       </div>
-
-      {/* Mobile Sidebar Overlay */}
-      {sidebarOpen && (
-        <div className="fixed inset-0 bg-black/40 z-30 lg:hidden" onClick={() => setSidebarOpen(false)} />
-      )}
-
-      {/* Command Palette */}
-      <CommandPalette
-        items={commandItems}
-        isOpen={cmdOpen}
-        onClose={() => setCmdOpen(false)}
-        onSelect={handleCommandSelect}
-      />
-
-      {/* Theme Switcher */}
-      <ThemeSwitcher position="bottom-right" />
     </div>
   )
 }

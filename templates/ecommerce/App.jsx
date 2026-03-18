@@ -14,6 +14,7 @@ import { Sparkline, DonutChart, AreaChart, BarChart } from '@/components/shared/
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabContent } from '@/components/ui/tabs'
 import { Progress } from '@/components/ui/progress'
+import { useTheme } from '@/context/ThemeContext'
 
 /* ------------------------------------------------------------------ */
 /*  DATA                                                               */
@@ -133,6 +134,18 @@ const productPerformance = [
   { name: 'AirPods Pro 2', views: 9100, conversion: 9.8, revenue: 222309, trend: 'up' },
   { name: 'Sony WH-1000XM5', views: 6200, conversion: 7.5, revenue: 163345, trend: 'down' },
   { name: 'Galaxy S24 Ultra', views: 5800, conversion: 5.3, revenue: 365695, trend: 'up' },
+]
+
+const fulfillmentSla = [
+  { carrier: 'FedEx Priority', onTime: 96, delayed: 4, avgHours: 21, trend: 'up' },
+  { carrier: 'UPS Ground', onTime: 92, delayed: 8, avgHours: 30, trend: 'down' },
+  { carrier: 'DHL Express', onTime: 98, delayed: 2, avgHours: 18, trend: 'up' },
+]
+
+const operationsAlerts = [
+  { title: 'Payment retry spike detected', detail: 'Card retries are 18% above baseline in the last 2 hours.', severity: 'warning' },
+  { title: 'Warehouse West nearing capacity', detail: 'Storage utilization has reached 91%, recommend transfer batch.', severity: 'error' },
+  { title: 'Express orders healthy', detail: 'SLA compliance remains above 97% for premium shipping.', severity: 'success' },
 ]
 
 /* ------------------------------------------------------------------ */
@@ -431,6 +444,60 @@ function DashboardTab() {
                 </div>
               ))}
             </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+        <Card className="xl:col-span-2">
+          <CardHeader className="pb-2">
+            <div className="flex items-center justify-between">
+              <CardTitle className="text-base font-semibold">Fulfillment SLA Monitor</CardTitle>
+              <Badge variant="info">Live</Badge>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {fulfillmentSla.map((row) => (
+              <div key={row.carrier} className="rounded-xl border border-slate-200 dark:border-slate-800 p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-sm font-semibold">{row.carrier}</p>
+                  <div className="flex items-center gap-1 text-xs">
+                    {row.trend === 'up' ? (
+                      <TrendingUp className="w-3.5 h-3.5 text-emerald-500" />
+                    ) : (
+                      <TrendingDown className="w-3.5 h-3.5 text-red-500" />
+                    )}
+                    <span className={row.trend === 'up' ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'}>
+                      {row.onTime}% on-time
+                    </span>
+                  </div>
+                </div>
+                <Progress value={row.onTime} max={100} size="sm" color={row.onTime > 95 ? 'bg-emerald-500' : row.onTime > 90 ? 'bg-amber-500' : 'bg-red-500'} />
+                <div className="mt-2 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+                  <span>{row.delayed}% delayed</span>
+                  <span>{row.avgHours}h avg delivery</span>
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base font-semibold">Ops Alerts</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {operationsAlerts.map((a) => (
+              <div key={a.title} className="rounded-lg border border-slate-200 dark:border-slate-800 p-3">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-medium">{a.title}</p>
+                  <Badge variant={a.severity === 'success' ? 'success' : a.severity === 'warning' ? 'warning' : 'error'}>
+                    {a.severity}
+                  </Badge>
+                </div>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1.5">{a.detail}</p>
+              </div>
+            ))}
           </CardContent>
         </Card>
       </div>
@@ -970,6 +1037,7 @@ function AnalyticsTab() {
 
 function App() {
   const [activeTab, setActiveTab] = useState('dashboard')
+  const { isDark } = useTheme()
 
   const mainTabs = [
     { id: 'dashboard', label: 'Dashboard' },
@@ -980,42 +1048,44 @@ function App() {
   ]
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans">
-      <div className="flex">
-        <Sidebar activeTab={activeTab} onTabChange={setActiveTab} />
+    <div className={isDark ? 'dark' : ''}>
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans">
+        <div className="flex">
+          <Sidebar activeTab={activeTab} onTabChange={setActiveTab} />
 
-        <div className="flex-1 min-w-0">
-          <TopBar activeTab={activeTab} onTabChange={setActiveTab} />
+          <div className="flex-1 min-w-0">
+            <TopBar activeTab={activeTab} onTabChange={setActiveTab} />
 
-          <main className="p-4 lg:p-8 max-w-[1600px] mx-auto">
-            <div className="mb-6 lg:hidden">
-              <Tabs tabs={mainTabs} active={activeTab} onChange={setActiveTab} className="overflow-x-auto" />
-            </div>
+            <main className="p-4 lg:p-8 max-w-[1600px] mx-auto">
+              <div className="mb-6 lg:hidden">
+                <Tabs tabs={mainTabs} active={activeTab} onChange={setActiveTab} className="overflow-x-auto" />
+              </div>
 
-            <TabContent id="dashboard" active={activeTab}>
-              <DashboardTab />
-            </TabContent>
+              <TabContent id="dashboard" active={activeTab}>
+                <DashboardTab />
+              </TabContent>
 
-            <TabContent id="products" active={activeTab}>
-              <ProductsTab />
-            </TabContent>
+              <TabContent id="products" active={activeTab}>
+                <ProductsTab />
+              </TabContent>
 
-            <TabContent id="orders" active={activeTab}>
-              <OrdersTab />
-            </TabContent>
+              <TabContent id="orders" active={activeTab}>
+                <OrdersTab />
+              </TabContent>
 
-            <TabContent id="customers" active={activeTab}>
-              <CustomersTab />
-            </TabContent>
+              <TabContent id="customers" active={activeTab}>
+                <CustomersTab />
+              </TabContent>
 
-            <TabContent id="analytics" active={activeTab}>
-              <AnalyticsTab />
-            </TabContent>
-          </main>
+              <TabContent id="analytics" active={activeTab}>
+                <AnalyticsTab />
+              </TabContent>
+            </main>
+          </div>
         </div>
-      </div>
 
-      <ThemeSwitcher />
+        <ThemeSwitcher />
+      </div>
     </div>
   )
 }

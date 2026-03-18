@@ -16,6 +16,7 @@ import { Sparkline, DonutChart, AreaChart } from '@/components/shared/MiniChart'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabContent } from '@/components/ui/tabs'
 import { CommandPalette } from '@/components/shared/CommandPalette'
+import { useTheme } from '@/context/ThemeContext'
 
 /* ------------------------------------------------------------------ */
 /*  DATA                                                               */
@@ -123,6 +124,18 @@ const activities = [
   { id: 7, type: 'deal', text: 'New deal created: Shopify - $42,000', time: '5 hours ago', icon: Briefcase, color: 'text-indigo-500 bg-indigo-50 dark:bg-indigo-900/20' },
   { id: 8, type: 'meeting', text: 'Product demo with Twilio engineering team', time: '6 hours ago', icon: Calendar, color: 'text-amber-500 bg-amber-50 dark:bg-amber-900/20' },
   { id: 9, type: 'note', text: 'Updated pricing notes for MongoDB renewal', time: '8 hours ago', icon: FileText, color: 'text-slate-500 bg-slate-50 dark:bg-slate-800' },
+]
+
+const aiRecommendations = [
+  { title: 'Push Salesforce Renewal to Legal', detail: 'Deal confidence is 82% and all technical blockers are cleared.', impact: '+$84,000', level: 'high' },
+  { title: 'Sequence Datadog Expansion', detail: 'High intent signals from 3 champion stakeholders in last 24h.', impact: '+$45,000', level: 'medium' },
+  { title: 'Schedule Figma Multi-Team Demo', detail: 'Decision committee now includes procurement and design ops.', impact: '+$28,000', level: 'medium' },
+]
+
+const dealRisks = [
+  { company: 'Atlassian', reason: 'Legal redlines pending', risk: 68, owner: 'Jordan Davis' },
+  { company: 'Cloudflare', reason: 'No follow-up in 5 days', risk: 57, owner: 'Rachel Kim' },
+  { company: 'Shopify', reason: 'Competitor in final round', risk: 74, owner: 'Jordan Davis' },
 ]
 
 const contacts = [
@@ -254,6 +267,7 @@ function App() {
   const [contactFilter, setContactFilter] = useState('all')
   const [cmdOpen, setCmdOpen] = useState(false)
   const [taskItems, setTaskItems] = useState(tasks)
+  const { isDark } = useTheme()
 
   const sidebarW = sidebarCollapsed ? 'w-[68px]' : 'w-64'
   const mainPl = sidebarCollapsed ? 'lg:pl-[68px]' : 'lg:pl-64'
@@ -302,10 +316,11 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans">
+    <div className={isDark ? 'dark' : ''}>
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans">
 
-      {/* ---- SIDEBAR ---- */}
-      <aside
+        {/* ---- SIDEBAR ---- */}
+        <aside
         className={`fixed left-0 top-0 h-full ${sidebarW} bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 z-40 transform transition-all duration-200 lg:translate-x-0 ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         } flex flex-col`}
@@ -417,10 +432,10 @@ function App() {
             )}
           </div>
         </div>
-      </aside>
+        </aside>
 
-      {/* ---- MAIN CONTENT ---- */}
-      <div className={`${mainPl} transition-all duration-200`}>
+        {/* ---- MAIN CONTENT ---- */}
+        <div className={`${mainPl} transition-all duration-200`}>
         {/* Header */}
         <header className="sticky top-0 h-16 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-6 z-30">
           <div className="flex items-center gap-4">
@@ -618,6 +633,54 @@ function App() {
                   </div>
                 </CardContent>
               </Card>
+
+              <div className="grid lg:grid-cols-3 gap-6">
+                <Card className="lg:col-span-2 border-slate-200 dark:border-slate-800">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="font-display">AI Next Best Actions</CardTitle>
+                      <Badge variant="info">Assistant</Badge>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    {aiRecommendations.map((item) => (
+                      <div key={item.title} className="rounded-lg border border-slate-200 dark:border-slate-800 p-4">
+                        <div className="flex items-start justify-between gap-3">
+                          <div>
+                            <p className="text-sm font-semibold">{item.title}</p>
+                            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{item.detail}</p>
+                          </div>
+                          <Badge variant={item.level === 'high' ? 'warning' : 'secondary'}>{item.level}</Badge>
+                        </div>
+                        <p className="text-xs mt-2 text-emerald-600 dark:text-emerald-400">Potential impact {item.impact}</p>
+                      </div>
+                    ))}
+                  </CardContent>
+                </Card>
+
+                <Card className="border-slate-200 dark:border-slate-800">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-base font-display">Deal Risk Radar</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    {dealRisks.map((item) => (
+                      <div key={item.company} className="rounded-lg border border-slate-200 dark:border-slate-800 p-3">
+                        <div className="flex items-center justify-between">
+                          <p className="text-sm font-medium">{item.company}</p>
+                          <span className="text-xs font-semibold text-red-600 dark:text-red-400">{item.risk}% risk</span>
+                        </div>
+                        <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{item.reason}</p>
+                        <div className="mt-2">
+                          <div className="h-1.5 w-full rounded-full bg-slate-200 dark:bg-slate-800">
+                            <div className="h-1.5 rounded-full bg-red-500" style={{ width: `${item.risk}%` }} />
+                          </div>
+                        </div>
+                        <p className="text-[11px] mt-1.5 text-slate-500 dark:text-slate-400">Owner: {item.owner}</p>
+                      </div>
+                    ))}
+                  </CardContent>
+                </Card>
+              </div>
             </div>
           </TabContent>
 
@@ -1011,23 +1074,24 @@ function App() {
             </div>
           </TabContent>
         </main>
+        </div>
+
+        {/* Mobile sidebar overlay */}
+        {sidebarOpen && (
+          <div className="fixed inset-0 bg-black/40 z-30 lg:hidden" onClick={() => setSidebarOpen(false)} />
+        )}
+
+        {/* Command Palette */}
+        <CommandPalette
+          items={commandItems}
+          isOpen={cmdOpen}
+          onClose={() => setCmdOpen(false)}
+          onSelect={handleCommand}
+        />
+
+        {/* Theme Switcher */}
+        <ThemeSwitcher position="bottom-right" />
       </div>
-
-      {/* Mobile sidebar overlay */}
-      {sidebarOpen && (
-        <div className="fixed inset-0 bg-black/40 z-30 lg:hidden" onClick={() => setSidebarOpen(false)} />
-      )}
-
-      {/* Command Palette */}
-      <CommandPalette
-        items={commandItems}
-        isOpen={cmdOpen}
-        onClose={() => setCmdOpen(false)}
-        onSelect={handleCommand}
-      />
-
-      {/* Theme Switcher */}
-      <ThemeSwitcher position="bottom-right" />
     </div>
   )
 }
