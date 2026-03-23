@@ -45,6 +45,11 @@ const templates = {
   login: lazy(() => import('../templates/login/App.jsx')),
   register: lazy(() => import('../templates/register/App.jsx')),
   onboarding: lazy(() => import('../templates/onboarding/App.jsx')),
+  saas: lazy(() => import('../templates/saas/App.jsx')),
+  saas2: lazy(() => import('../templates/saas2/App.jsx')),
+  formbuilder: lazy(() => import('../templates/formbuilder/App.jsx')),
+  nutritionapp: lazy(() => import('../templates/nutritionapp/App.jsx')),
+  calendar: lazy(() => import('../templates/calendar/App.jsx')),
 }
 
 /* ------------------------------------------------------------------ */

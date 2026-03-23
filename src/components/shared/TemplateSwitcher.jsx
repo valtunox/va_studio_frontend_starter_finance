@@ -10,7 +10,8 @@ import {
   ShoppingCart, LayoutDashboard, Users, Database, DollarSign,
   TrendingUp, Briefcase, FileText, Leaf, Bot, Building,
   Building2, Rocket, LogIn, UserPlus, ChevronRight, ChevronLeft,
-  Layers,
+  Layers, Sparkles, Terminal, ClipboardList, Apple,
+  CalendarDays,
 } from 'lucide-react'
 
 const TEMPLATES = [
@@ -29,6 +30,11 @@ const TEMPLATES = [
   { id: 'onboarding',  label: 'Onboarding',   icon: Rocket,          color: 'text-pink-500' },
   { id: 'login',       label: 'Login',        icon: LogIn,           color: 'text-gray-500' },
   { id: 'register',    label: 'Register',     icon: UserPlus,        color: 'text-purple-500' },
+  { id: 'saas',        label: 'SaaS Landing', icon: Sparkles,        color: 'text-indigo-500' },
+  { id: 'saas2',       label: 'SaaS Dark',    icon: Terminal,        color: 'text-cyan-500' },
+  { id: 'formbuilder', label: 'Form Builder', icon: ClipboardList,   color: 'text-fuchsia-500' },
+  { id: 'nutritionapp',label: 'Nutrition App',icon: Apple,           color: 'text-lime-500' },
+  { id: 'calendar',    label: 'Calendar',     icon: CalendarDays,    color: 'text-blue-500' },
 ]
 
 export function TemplateSwitcher({ activeTemplate, onSelect }) {
