@@ -1,10 +1,11 @@
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import {
   ShoppingBag, Search, ShoppingCart, User, ChevronRight, Star,
   Truck, Shield, RefreshCw, Headphones, Clock, Zap, Heart,
   Smartphone, Shirt, Home, Dumbbell, Sparkles, Car, BookOpen,
   Apple, Package, MapPin, Store, ChevronDown, ArrowRight,
-  Monitor, Gamepad2, Baby, Leaf
+  Monitor, Gamepad2, Baby, Leaf, X, Plus, Minus, Trash2, Check,
+  ChevronLeft, Filter, SlidersHorizontal, Eye
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -17,6 +18,7 @@ import { ThemeSwitcher } from '@/components/shared/ThemeSwitcher'
 /* ------------------------------------------------------------------ */
 
 const categories = [
+  { name: 'All', icon: ShoppingBag, items: '100K+' },
   { name: 'Electronics', icon: Smartphone, items: '24K' },
   { name: 'Fashion', icon: Shirt, items: '18K' },
   { name: 'Home & Garden', icon: Home, items: '12K' },
@@ -30,45 +32,45 @@ const categories = [
 ]
 
 const flashDeals = [
-  { name: 'Wireless Earbuds Pro', price: 29.99, original: 49.99, discount: 40, rating: 4.5, sold: 2341, gradient: 'from-blue-400 to-indigo-500' },
-  { name: 'Smart Watch Ultra', price: 89.00, original: 149.00, discount: 40, rating: 4.7, sold: 1822, gradient: 'from-purple-400 to-pink-500' },
-  { name: 'Running Shoes Air', price: 45.00, original: 79.00, discount: 43, rating: 4.3, sold: 3105, gradient: 'from-green-400 to-teal-500' },
-  { name: 'Travel Backpack', price: 25.00, original: 55.00, discount: 55, rating: 4.6, sold: 1567, gradient: 'from-amber-400 to-orange-500' },
-  { name: 'Bluetooth Speaker', price: 35.00, original: 59.00, discount: 41, rating: 4.4, sold: 2890, gradient: 'from-rose-400 to-red-500' },
-  { name: 'Phone Case Premium', price: 12.00, original: 24.00, discount: 50, rating: 4.2, sold: 5420, gradient: 'from-cyan-400 to-blue-500' },
+  { id: 'fd1', name: 'Wireless Earbuds Pro', price: 29.99, original: 49.99, discount: 40, rating: 4.5, sold: 2341, category: 'Electronics', image: 'https://images.unsplash.com/photo-1590658268037-6bf12f032f55?w=400&h=400&fit=crop' },
+  { id: 'fd2', name: 'Smart Watch Ultra', price: 89.00, original: 149.00, discount: 40, rating: 4.7, sold: 1822, category: 'Electronics', image: 'https://images.unsplash.com/photo-1546868871-af0de0ae72be?w=400&h=400&fit=crop' },
+  { id: 'fd3', name: 'Running Shoes Air', price: 45.00, original: 79.00, discount: 43, rating: 4.3, sold: 3105, category: 'Sports', image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=400&fit=crop' },
+  { id: 'fd4', name: 'Leather Travel Backpack', price: 25.00, original: 55.00, discount: 55, rating: 4.6, sold: 1567, category: 'Fashion', image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&h=400&fit=crop' },
+  { id: 'fd5', name: 'Bluetooth Speaker', price: 35.00, original: 59.00, discount: 41, rating: 4.4, sold: 2890, category: 'Electronics', image: 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400&h=400&fit=crop' },
+  { id: 'fd6', name: 'Phone Case Premium', price: 12.00, original: 24.00, discount: 50, rating: 4.2, sold: 5420, category: 'Electronics', image: 'https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb?w=400&h=400&fit=crop' },
 ]
 
 const featuredProducts = [
-  { name: 'Noise Cancelling Headphones', price: 79.99, rating: 4.8, reviews: 1243, seller: 'TechZone', location: 'San Francisco', freeShipping: true, gradient: 'from-slate-600 to-slate-800', category: 'Electronics' },
-  { name: 'Cotton Oversized Hoodie', price: 34.99, rating: 4.5, reviews: 892, seller: 'FashionHub', location: 'New York', freeShipping: true, gradient: 'from-pink-400 to-rose-500', category: 'Fashion' },
-  { name: 'Ceramic Plant Pot Set', price: 28.50, rating: 4.6, reviews: 567, seller: 'HomeStyle', location: 'Portland', freeShipping: false, gradient: 'from-emerald-400 to-green-600', category: 'Home' },
-  { name: 'Yoga Mat Premium 6mm', price: 42.00, rating: 4.7, reviews: 2103, seller: 'SportsPro', location: 'Denver', freeShipping: true, gradient: 'from-violet-400 to-purple-600', category: 'Sports' },
-  { name: 'Vitamin C Serum 30ml', price: 18.99, rating: 4.9, reviews: 3421, seller: 'BeautyBox', location: 'Los Angeles', freeShipping: false, gradient: 'from-amber-300 to-yellow-500', category: 'Beauty' },
-  { name: 'Mechanical Keyboard RGB', price: 65.00, rating: 4.6, reviews: 1876, seller: 'TechZone', location: 'San Francisco', freeShipping: true, gradient: 'from-gray-700 to-gray-900', category: 'Electronics' },
-  { name: 'Leather Crossbody Bag', price: 55.00, rating: 4.4, reviews: 743, seller: 'FashionHub', location: 'New York', freeShipping: true, gradient: 'from-orange-700 to-amber-900', category: 'Fashion' },
-  { name: 'LED Desk Lamp Touch', price: 32.99, rating: 4.5, reviews: 1102, seller: 'HomeStyle', location: 'Portland', freeShipping: false, gradient: 'from-sky-400 to-blue-600', category: 'Home' },
-  { name: 'Resistance Bands Set', price: 19.99, rating: 4.3, reviews: 2567, seller: 'SportsPro', location: 'Denver', freeShipping: true, gradient: 'from-red-400 to-rose-600', category: 'Sports' },
-  { name: 'Stainless Steel Water Bottle', price: 24.99, rating: 4.7, reviews: 4231, seller: 'HomeStyle', location: 'Portland', freeShipping: true, gradient: 'from-teal-400 to-cyan-600', category: 'Home' },
-  { name: 'Wireless Charging Pad', price: 22.00, rating: 4.4, reviews: 1654, seller: 'TechZone', location: 'San Francisco', freeShipping: false, gradient: 'from-indigo-400 to-blue-700', category: 'Electronics' },
-  { name: 'Scented Candle Gift Set', price: 29.99, rating: 4.8, reviews: 987, seller: 'HomeStyle', location: 'Portland', freeShipping: true, gradient: 'from-fuchsia-400 to-pink-600', category: 'Home' },
+  { id: 'fp1', name: 'Sony WH-1000XM5 Headphones', price: 79.99, rating: 4.8, reviews: 1243, seller: 'TechZone', location: 'San Francisco', freeShipping: true, category: 'Electronics', image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop', description: 'Industry-leading noise cancellation with exceptional sound quality. 30-hour battery life, comfortable fit for all-day wear.' },
+  { id: 'fp2', name: 'Cotton Oversized Hoodie', price: 34.99, rating: 4.5, reviews: 892, seller: 'FashionHub', location: 'New York', freeShipping: true, category: 'Fashion', image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400&h=400&fit=crop', description: 'Ultra-soft cotton blend hoodie with a relaxed oversized fit. Perfect for layering or wearing solo.' },
+  { id: 'fp3', name: 'Ceramic Plant Pot Set', price: 28.50, rating: 4.6, reviews: 567, seller: 'HomeStyle', location: 'Portland', freeShipping: false, category: 'Home & Garden', image: 'https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=400&h=400&fit=crop', description: 'Set of 3 handcrafted ceramic pots with drainage holes. Minimalist design fits any home decor.' },
+  { id: 'fp4', name: 'Premium Yoga Mat 6mm', price: 42.00, rating: 4.7, reviews: 2103, seller: 'SportsPro', location: 'Denver', freeShipping: true, category: 'Sports', image: 'https://images.unsplash.com/photo-1601925260368-ae2f83cf8b7f?w=400&h=400&fit=crop', description: 'Eco-friendly TPE material with superior grip. Non-slip surface and alignment guides for perfect practice.' },
+  { id: 'fp5', name: 'Vitamin C Serum 30ml', price: 18.99, rating: 4.9, reviews: 3421, seller: 'BeautyBox', location: 'Los Angeles', freeShipping: false, category: 'Beauty', image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop', description: 'Brightening serum with 20% Vitamin C, Hyaluronic Acid, and Vitamin E. Dermatologist tested.' },
+  { id: 'fp6', name: 'Mechanical Keyboard RGB', price: 65.00, rating: 4.6, reviews: 1876, seller: 'TechZone', location: 'San Francisco', freeShipping: true, category: 'Electronics', image: 'https://images.unsplash.com/photo-1618384887929-16ec33fab9ef?w=400&h=400&fit=crop', description: 'Hot-swappable switches, per-key RGB lighting, and a premium aluminum frame. Cherry MX compatible.' },
+  { id: 'fp7', name: 'Leather Crossbody Bag', price: 55.00, rating: 4.4, reviews: 743, seller: 'FashionHub', location: 'New York', freeShipping: true, category: 'Fashion', image: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=400&h=400&fit=crop', description: 'Genuine leather crossbody with adjustable strap. Multiple compartments for everyday essentials.' },
+  { id: 'fp8', name: 'LED Desk Lamp Touch', price: 32.99, rating: 4.5, reviews: 1102, seller: 'HomeStyle', location: 'Portland', freeShipping: false, category: 'Home & Garden', image: 'https://images.unsplash.com/photo-1507473885765-e6ed057ab6fe?w=400&h=400&fit=crop', description: 'Touch-sensitive LED lamp with 5 brightness levels and 3 color temperatures. USB charging port included.' },
+  { id: 'fp9', name: 'Resistance Bands Set', price: 19.99, rating: 4.3, reviews: 2567, seller: 'SportsPro', location: 'Denver', freeShipping: true, category: 'Sports', image: 'https://images.unsplash.com/photo-1598289431512-b97b0917affc?w=400&h=400&fit=crop', description: 'Set of 5 resistance bands with different levels. Includes door anchor, handles, and carry bag.' },
+  { id: 'fp10', name: 'Stainless Steel Water Bottle', price: 24.99, rating: 4.7, reviews: 4231, seller: 'HomeStyle', location: 'Portland', freeShipping: true, category: 'Home & Garden', image: 'https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=400&h=400&fit=crop', description: 'Double-wall vacuum insulated. Keeps drinks cold 24hrs or hot 12hrs. BPA-free, leak-proof lid.' },
+  { id: 'fp11', name: 'Wireless Charging Pad', price: 22.00, rating: 4.4, reviews: 1654, seller: 'TechZone', location: 'San Francisco', freeShipping: false, category: 'Electronics', image: 'https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=400&h=400&fit=crop', description: '15W fast wireless charger compatible with all Qi devices. Slim, anti-slip design with LED indicator.' },
+  { id: 'fp12', name: 'Scented Candle Gift Set', price: 29.99, rating: 4.8, reviews: 987, seller: 'HomeStyle', location: 'Portland', freeShipping: true, category: 'Home & Garden', image: 'https://images.unsplash.com/photo-1602607688066-8919935a44f8?w=400&h=400&fit=crop', description: 'Set of 4 hand-poured soy candles in Lavender, Vanilla, Citrus, and Sandalwood. 40hr burn each.' },
 ]
 
 const topSellers = [
-  { name: 'TechZone', rating: 4.9, products: 1240, color: 'from-blue-500 to-indigo-600' },
-  { name: 'FashionHub', rating: 4.8, products: 3420, color: 'from-pink-500 to-rose-600' },
-  { name: 'HomeStyle', rating: 4.7, products: 890, color: 'from-emerald-500 to-green-600' },
-  { name: 'SportsPro', rating: 4.8, products: 675, color: 'from-orange-500 to-amber-600' },
-  { name: 'BeautyBox', rating: 4.9, products: 2100, color: 'from-purple-500 to-violet-600' },
-  { name: 'BookWorld', rating: 4.6, products: 5600, color: 'from-cyan-500 to-teal-600' },
+  { name: 'TechZone', rating: 4.9, products: 1240, avatar: 'https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=100&h=100&fit=crop' },
+  { name: 'FashionHub', rating: 4.8, products: 3420, avatar: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=100&h=100&fit=crop' },
+  { name: 'HomeStyle', rating: 4.7, products: 890, avatar: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=100&h=100&fit=crop' },
+  { name: 'SportsPro', rating: 4.8, products: 675, avatar: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=100&h=100&fit=crop' },
+  { name: 'BeautyBox', rating: 4.9, products: 2100, avatar: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=100&h=100&fit=crop' },
+  { name: 'BookWorld', rating: 4.6, products: 5600, avatar: 'https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=100&h=100&fit=crop' },
 ]
 
 const recentlyViewed = [
-  { name: 'USB-C Hub 7-in-1', price: 35.99, gradient: 'from-gray-400 to-slate-600' },
-  { name: 'Linen Throw Pillow', price: 22.00, gradient: 'from-amber-300 to-orange-400' },
-  { name: 'Running Shorts', price: 28.99, gradient: 'from-blue-400 to-sky-500' },
-  { name: 'Face Moisturizer', price: 15.50, gradient: 'from-pink-300 to-rose-400' },
-  { name: 'Notebook Journal', price: 12.99, gradient: 'from-emerald-300 to-teal-400' },
-  { name: 'Sunglasses Polarized', price: 39.99, gradient: 'from-yellow-400 to-amber-500' },
+  { id: 'rv1', name: 'USB-C Hub 7-in-1', price: 35.99, image: 'https://images.unsplash.com/photo-1625842268584-8f3296236761?w=300&h=300&fit=crop' },
+  { id: 'rv2', name: 'Linen Throw Pillow', price: 22.00, image: 'https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?w=300&h=300&fit=crop' },
+  { id: 'rv3', name: 'Running Shorts', price: 28.99, image: 'https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=300&h=300&fit=crop' },
+  { id: 'rv4', name: 'Face Moisturizer', price: 15.50, image: 'https://images.unsplash.com/photo-1611930022073-b7a4ba5fcccd?w=300&h=300&fit=crop' },
+  { id: 'rv5', name: 'Notebook Journal', price: 12.99, image: 'https://images.unsplash.com/photo-1531346878377-a5be20888e57?w=300&h=300&fit=crop' },
+  { id: 'rv6', name: 'Sunglasses Polarized', price: 39.99, image: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=300&h=300&fit=crop' },
 ]
 
 /* ------------------------------------------------------------------ */
@@ -92,33 +94,407 @@ function StarRating({ rating, size = 'sm' }) {
 }
 
 /* ------------------------------------------------------------------ */
+/*  HELPER: Countdown Timer                                            */
+/* ------------------------------------------------------------------ */
+
+function useCountdown() {
+  const [time, setTime] = useState({ hours: 5, minutes: 23, seconds: 41 })
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTime(prev => {
+        let { hours, minutes, seconds } = prev
+        seconds--
+        if (seconds < 0) { seconds = 59; minutes-- }
+        if (minutes < 0) { minutes = 59; hours-- }
+        if (hours < 0) { hours = 23; minutes = 59; seconds = 59 }
+        return { hours, minutes, seconds }
+      })
+    }, 1000)
+    return () => clearInterval(interval)
+  }, [])
+
+  return time
+}
+
+/* ------------------------------------------------------------------ */
+/*  COMPONENT: Product Detail Modal                                    */
+/* ------------------------------------------------------------------ */
+
+function ProductModal({ product, onClose, onAddToCart, isInWishlist, onToggleWishlist }) {
+  const [quantity, setQuantity] = useState(1)
+  const [activeTab, setActiveTab] = useState('description')
+  const [addedToCart, setAddedToCart] = useState(false)
+
+  if (!product) return null
+
+  const handleAddToCart = () => {
+    onAddToCart(product, quantity)
+    setAddedToCart(true)
+    setTimeout(() => setAddedToCart(false), 2000)
+  }
+
+  const tabs = [
+    { id: 'description', label: 'Description' },
+    { id: 'specs', label: 'Specifications' },
+    { id: 'reviews', label: `Reviews (${product.reviews?.toLocaleString() || 0})` },
+    { id: 'shipping', label: 'Shipping' },
+  ]
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onClose}>
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+      <div
+        className="relative bg-white dark:bg-gray-900 rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl"
+        onClick={e => e.stopPropagation()}
+      >
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 z-10 p-2 rounded-full bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+        >
+          <X className="h-5 w-5" />
+        </button>
+
+        <div className="grid md:grid-cols-2 gap-0">
+          {/* Image */}
+          <div className="relative aspect-square bg-gray-100 dark:bg-gray-800 rounded-tl-2xl md:rounded-bl-2xl overflow-hidden">
+            <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+            {product.discount && (
+              <Badge className="absolute top-4 left-4 bg-red-500 text-white border-0 text-sm font-bold px-3 py-1">
+                -{product.discount}% OFF
+              </Badge>
+            )}
+            {product.freeShipping && (
+              <Badge className="absolute top-4 left-4 bg-green-500 text-white border-0 text-sm px-3 py-1">
+                <Truck className="h-3.5 w-3.5 mr-1" /> Free Shipping
+              </Badge>
+            )}
+          </div>
+
+          {/* Details */}
+          <div className="p-6 flex flex-col">
+            {product.category && (
+              <span className="text-xs font-medium text-orange-500 uppercase tracking-wider">{product.category}</span>
+            )}
+            <h2 className="text-xl font-bold mt-1">{product.name}</h2>
+
+            <div className="flex items-center gap-2 mt-2">
+              <StarRating rating={product.rating} size="md" />
+              <span className="text-sm text-gray-500">({product.reviews?.toLocaleString() || product.sold?.toLocaleString() || 0})</span>
+            </div>
+
+            <div className="flex items-baseline gap-3 mt-4">
+              <span className="text-3xl font-bold text-orange-500">${product.price.toFixed(2)}</span>
+              {product.original && (
+                <span className="text-lg text-gray-400 line-through">${product.original.toFixed(2)}</span>
+              )}
+            </div>
+
+            {product.seller && (
+              <div className="flex items-center gap-2 mt-3 text-sm text-gray-500 dark:text-gray-400">
+                <Store className="h-4 w-4" />
+                <span>{product.seller}</span>
+                <span className="mx-1">·</span>
+                <MapPin className="h-4 w-4" />
+                <span>{product.location}</span>
+              </div>
+            )}
+
+            {/* Quantity */}
+            <div className="flex items-center gap-3 mt-6">
+              <span className="text-sm font-medium">Qty:</span>
+              <div className="flex items-center border border-gray-300 dark:border-gray-700 rounded-lg">
+                <button
+                  onClick={() => setQuantity(q => Math.max(1, q - 1))}
+                  className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-l-lg transition-colors"
+                >
+                  <Minus className="h-4 w-4" />
+                </button>
+                <span className="px-4 py-2 text-sm font-medium min-w-[40px] text-center">{quantity}</span>
+                <button
+                  onClick={() => setQuantity(q => Math.min(10, q + 1))}
+                  className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-r-lg transition-colors"
+                >
+                  <Plus className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+
+            {/* Actions */}
+            <div className="flex gap-3 mt-6">
+              <Button
+                onClick={handleAddToCart}
+                className={`flex-1 h-12 text-base font-semibold transition-all ${addedToCart ? 'bg-green-500 hover:bg-green-600' : 'bg-orange-500 hover:bg-orange-600'} text-white`}
+              >
+                {addedToCart ? (
+                  <><Check className="h-5 w-5 mr-2" /> Added!</>
+                ) : (
+                  <><ShoppingCart className="h-5 w-5 mr-2" /> Add to Cart</>
+                )}
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => onToggleWishlist(product.id)}
+                className={`h-12 px-4 ${isInWishlist ? 'border-red-300 text-red-500' : ''}`}
+              >
+                <Heart className={`h-5 w-5 ${isInWishlist ? 'fill-red-500 text-red-500' : ''}`} />
+              </Button>
+            </div>
+
+            {/* Tabs */}
+            <div className="mt-6 border-t border-gray-200 dark:border-gray-800 pt-4">
+              <div className="flex gap-1 border-b border-gray-200 dark:border-gray-800">
+                {tabs.map(tab => (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`px-3 py-2 text-sm font-medium border-b-2 transition-colors whitespace-nowrap ${
+                      activeTab === tab.id
+                        ? 'border-orange-500 text-orange-500'
+                        : 'border-transparent text-gray-500 hover:text-gray-700 dark:hover:text-gray-300'
+                    }`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+              <div className="mt-4 text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                {activeTab === 'description' && (
+                  <p>{product.description || 'High-quality product with premium materials. Designed for everyday use with lasting durability.'}</p>
+                )}
+                {activeTab === 'specs' && (
+                  <ul className="space-y-2">
+                    <li className="flex justify-between py-1 border-b border-gray-100 dark:border-gray-800"><span className="font-medium text-gray-700 dark:text-gray-300">Brand</span><span>{product.seller || 'ShopVerse'}</span></li>
+                    <li className="flex justify-between py-1 border-b border-gray-100 dark:border-gray-800"><span className="font-medium text-gray-700 dark:text-gray-300">Category</span><span>{product.category}</span></li>
+                    <li className="flex justify-between py-1 border-b border-gray-100 dark:border-gray-800"><span className="font-medium text-gray-700 dark:text-gray-300">Rating</span><span>{product.rating}/5</span></li>
+                    <li className="flex justify-between py-1"><span className="font-medium text-gray-700 dark:text-gray-300">Condition</span><span>New</span></li>
+                  </ul>
+                )}
+                {activeTab === 'reviews' && (
+                  <div className="space-y-4">
+                    {[5, 4, 3].map(stars => (
+                      <div key={stars} className="flex items-start gap-3 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-lg">
+                        <div className="h-8 w-8 rounded-full bg-orange-100 dark:bg-orange-900 flex items-center justify-center text-sm font-bold text-orange-600 shrink-0">
+                          {String.fromCharCode(64 + (6 - stars))}
+                        </div>
+                        <div>
+                          <StarRating rating={stars} />
+                          <p className="text-sm mt-1">{stars === 5 ? 'Excellent product! Exceeded my expectations.' : stars === 4 ? 'Great quality for the price. Would buy again.' : 'Good product but shipping took a while.'}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                {activeTab === 'shipping' && (
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3"><Truck className="h-5 w-5 text-green-500 shrink-0" /><div><p className="font-medium text-gray-700 dark:text-gray-300">{product.freeShipping ? 'Free Standard Shipping' : 'Standard Shipping - $4.99'}</p><p className="text-xs">Delivery in 5-7 business days</p></div></div>
+                    <div className="flex items-center gap-3"><Zap className="h-5 w-5 text-orange-500 shrink-0" /><div><p className="font-medium text-gray-700 dark:text-gray-300">Express Shipping - $12.99</p><p className="text-xs">Delivery in 1-2 business days</p></div></div>
+                    <div className="flex items-center gap-3"><RefreshCw className="h-5 w-5 text-blue-500 shrink-0" /><div><p className="font-medium text-gray-700 dark:text-gray-300">30-Day Free Returns</p><p className="text-xs">No questions asked return policy</p></div></div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+/* ------------------------------------------------------------------ */
+/*  COMPONENT: Cart Drawer                                             */
+/* ------------------------------------------------------------------ */
+
+function CartDrawer({ isOpen, onClose, items, onUpdateQty, onRemove }) {
+  const total = items.reduce((sum, item) => sum + item.price * item.qty, 0)
+
+  if (!isOpen) return null
+
+  return (
+    <div className="fixed inset-0 z-50" onClick={onClose}>
+      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
+      <div
+        className="absolute right-0 top-0 h-full w-full max-w-md bg-white dark:bg-gray-900 shadow-2xl flex flex-col"
+        onClick={e => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-800">
+          <h2 className="text-lg font-bold flex items-center gap-2">
+            <ShoppingCart className="h-5 w-5" /> Cart ({items.length})
+          </h2>
+          <button onClick={onClose} className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+            <X className="h-5 w-5" />
+          </button>
+        </div>
+
+        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          {items.length === 0 ? (
+            <div className="text-center py-16">
+              <ShoppingCart className="h-16 w-16 mx-auto text-gray-300 dark:text-gray-700 mb-4" />
+              <p className="text-gray-500">Your cart is empty</p>
+              <Button onClick={onClose} className="mt-4 bg-orange-500 hover:bg-orange-600 text-white">
+                Continue Shopping
+              </Button>
+            </div>
+          ) : (
+            items.map((item, idx) => (
+              <div key={idx} className="flex gap-3 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-xl">
+                <img src={item.image} alt={item.name} className="h-20 w-20 rounded-lg object-cover shrink-0" />
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-sm font-medium line-clamp-2">{item.name}</h3>
+                  <p className="text-orange-500 font-bold mt-1">${item.price.toFixed(2)}</p>
+                  <div className="flex items-center gap-2 mt-2">
+                    <div className="flex items-center border border-gray-300 dark:border-gray-700 rounded-lg">
+                      <button onClick={() => onUpdateQty(idx, item.qty - 1)} className="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-l-lg">
+                        <Minus className="h-3 w-3" />
+                      </button>
+                      <span className="px-3 text-xs font-medium">{item.qty}</span>
+                      <button onClick={() => onUpdateQty(idx, item.qty + 1)} className="p-1 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-r-lg">
+                        <Plus className="h-3 w-3" />
+                      </button>
+                    </div>
+                    <button onClick={() => onRemove(idx)} className="p-1 text-red-500 hover:bg-red-50 dark:hover:bg-red-950 rounded-lg transition-colors ml-auto">
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+
+        {items.length > 0 && (
+          <div className="border-t border-gray-200 dark:border-gray-800 p-4 space-y-3">
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-500">Subtotal</span>
+              <span className="font-medium">${total.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-500">Shipping</span>
+              <span className="font-medium text-green-500">{total >= 50 ? 'Free' : '$4.99'}</span>
+            </div>
+            <div className="flex justify-between text-base font-bold border-t border-gray-200 dark:border-gray-800 pt-3">
+              <span>Total</span>
+              <span className="text-orange-500">${(total + (total >= 50 ? 0 : 4.99)).toFixed(2)}</span>
+            </div>
+            <Button className="w-full h-12 bg-orange-500 hover:bg-orange-600 text-white font-bold text-base">
+              Checkout
+            </Button>
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+/* ------------------------------------------------------------------ */
 /*  MAIN COMPONENT                                                     */
 /* ------------------------------------------------------------------ */
 
 export default function EcommerceMarketplace() {
   const [searchQuery, setSearchQuery] = useState('')
-  const [activeCategory, setActiveCategory] = useState(null)
-  const [cartCount, setCartCount] = useState(3)
+  const [activeCategory, setActiveCategory] = useState('All')
+  const [cartItems, setCartItems] = useState([])
   const [activeBanner, setActiveBanner] = useState(0)
   const [hoveredProduct, setHoveredProduct] = useState(null)
+  const [selectedProduct, setSelectedProduct] = useState(null)
+  const [wishlist, setWishlist] = useState(new Set())
+  const [cartOpen, setCartOpen] = useState(false)
+  const [sortBy, setSortBy] = useState('recommended')
+  const [notification, setNotification] = useState(null)
+  const countdown = useCountdown()
+
+  // Auto-rotate banner
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveBanner(prev => (prev + 1) % 3)
+    }, 5000)
+    return () => clearInterval(interval)
+  }, [])
 
   const banners = [
-    { title: 'Mega Sale', subtitle: 'Up to 70% Off Electronics', cta: 'Shop Now', gradient: 'from-orange-500 via-amber-500 to-yellow-400' },
-    { title: 'Fashion Week', subtitle: 'Trending Styles at Unbeatable Prices', cta: 'Explore', gradient: 'from-pink-500 via-rose-500 to-red-400' },
-    { title: 'Home Refresh', subtitle: 'Transform Your Space for Less', cta: 'Discover', gradient: 'from-teal-500 via-emerald-500 to-green-400' },
+    { title: 'Mega Sale', subtitle: 'Up to 70% Off Electronics', cta: 'Shop Now', gradient: 'from-orange-500 via-amber-500 to-yellow-400', image: 'https://images.unsplash.com/photo-1468495244123-6c6c332eeece?w=800&h=400&fit=crop' },
+    { title: 'Fashion Week', subtitle: 'Trending Styles at Unbeatable Prices', cta: 'Explore', gradient: 'from-pink-500 via-rose-500 to-red-400', image: 'https://images.unsplash.com/photo-1483985988355-763728e1935b?w=800&h=400&fit=crop' },
+    { title: 'Home Refresh', subtitle: 'Transform Your Space for Less', cta: 'Discover', gradient: 'from-teal-500 via-emerald-500 to-green-400', image: 'https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?w=800&h=400&fit=crop' },
   ]
 
-  const handleAddToCart = () => {
-    setCartCount(prev => prev + 1)
+  const showNotification = useCallback((msg) => {
+    setNotification(msg)
+    setTimeout(() => setNotification(null), 2500)
+  }, [])
+
+  const handleAddToCart = useCallback((product, qty = 1) => {
+    setCartItems(prev => {
+      const existing = prev.findIndex(item => item.id === product.id)
+      if (existing >= 0) {
+        const updated = [...prev]
+        updated[existing] = { ...updated[existing], qty: updated[existing].qty + qty }
+        return updated
+      }
+      return [...prev, { id: product.id, name: product.name, price: product.price, image: product.image, qty }]
+    })
+    showNotification(`${product.name} added to cart!`)
+  }, [showNotification])
+
+  const handleUpdateCartQty = (idx, newQty) => {
+    if (newQty < 1) return
+    setCartItems(prev => {
+      const updated = [...prev]
+      updated[idx] = { ...updated[idx], qty: newQty }
+      return updated
+    })
   }
+
+  const handleRemoveFromCart = (idx) => {
+    setCartItems(prev => prev.filter((_, i) => i !== idx))
+  }
+
+  const toggleWishlist = useCallback((productId) => {
+    setWishlist(prev => {
+      const next = new Set(prev)
+      if (next.has(productId)) {
+        next.delete(productId)
+        showNotification('Removed from wishlist')
+      } else {
+        next.add(productId)
+        showNotification('Added to wishlist!')
+      }
+      return next
+    })
+  }, [showNotification])
+
+  // Filter products
+  const filteredProducts = featuredProducts.filter(p => {
+    const matchesCategory = activeCategory === 'All' || p.category === activeCategory
+    const matchesSearch = !searchQuery || p.name.toLowerCase().includes(searchQuery.toLowerCase()) || p.category.toLowerCase().includes(searchQuery.toLowerCase())
+    return matchesCategory && matchesSearch
+  })
+
+  // Sort products
+  const sortedProducts = [...filteredProducts].sort((a, b) => {
+    if (sortBy === 'price-low') return a.price - b.price
+    if (sortBy === 'price-high') return b.price - a.price
+    if (sortBy === 'rating') return b.rating - a.rating
+    if (sortBy === 'reviews') return b.reviews - a.reviews
+    return 0
+  })
+
+  const cartCount = cartItems.reduce((sum, item) => sum + item.qty, 0)
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100">
 
+      {/* Notification Toast */}
+      {notification && (
+        <div className="fixed top-4 right-4 z-[60] bg-green-500 text-white px-4 py-3 rounded-xl shadow-lg flex items-center gap-2 animate-in slide-in-from-right">
+          <Check className="h-4 w-4" />
+          <span className="text-sm font-medium">{notification}</span>
+        </div>
+      )}
+
       {/* ============================================================ */}
       {/*  PROMO BANNER                                                 */}
       {/* ============================================================ */}
-      <div className="bg-orange-500 dark:bg-orange-600 text-white text-center text-sm py-1.5 px-4 font-medium">
+      <div className="bg-orange-500 dark:bg-orange-600 text-white text-center text-sm py-1.5 px-4 font-medium cursor-pointer hover:bg-orange-600 dark:hover:bg-orange-700 transition-colors">
         Free shipping on orders over $50 &nbsp;|&nbsp; New user? Get 15% off with code <span className="font-bold">WELCOME15</span>
       </div>
 
@@ -128,18 +504,21 @@ export default function EcommerceMarketplace() {
       <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 sticky top-0 z-30">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-4">
           {/* Logo */}
-          <div className="flex items-center gap-2 shrink-0">
+          <button onClick={() => { setActiveCategory('All'); setSearchQuery('') }} className="flex items-center gap-2 shrink-0 hover:opacity-80 transition-opacity">
             <ShoppingBag className="h-7 w-7 text-orange-500" />
             <span className="text-xl font-bold tracking-tight">Shop<span className="text-orange-500">Verse</span></span>
-          </div>
+          </button>
 
           {/* Search Bar */}
           <div className="flex-1 max-w-2xl mx-auto flex">
             <div className="relative flex w-full">
-              <select className="h-10 rounded-l-lg border border-r-0 border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm px-3 pr-8 appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-orange-500">
-                <option>All</option>
-                {categories.slice(0, 6).map(c => (
-                  <option key={c.name}>{c.name}</option>
+              <select
+                className="h-10 rounded-l-lg border border-r-0 border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-sm px-3 pr-8 appearance-none cursor-pointer focus:outline-none focus:ring-2 focus:ring-orange-500"
+                value={activeCategory}
+                onChange={e => setActiveCategory(e.target.value)}
+              >
+                {categories.map(c => (
+                  <option key={c.name} value={c.name}>{c.name}</option>
                 ))}
               </select>
               <Input
@@ -147,6 +526,7 @@ export default function EcommerceMarketplace() {
                 className="rounded-none border-gray-300 dark:border-gray-700 h-10 flex-1"
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
+                onKeyDown={e => { if (e.key === 'Enter') e.target.blur() }}
               />
               <Button className="rounded-l-none rounded-r-lg bg-orange-500 hover:bg-orange-600 text-white h-10 px-5">
                 <Search className="h-4 w-4" />
@@ -158,12 +538,21 @@ export default function EcommerceMarketplace() {
           <div className="flex items-center gap-3 shrink-0">
             <ThemeSwitcher />
 
+            <Button variant="ghost" className="relative p-2 group">
+              <Heart className={`h-5 w-5 transition-colors ${wishlist.size > 0 ? 'text-red-500' : ''}`} />
+              {wishlist.size > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                  {wishlist.size}
+                </span>
+              )}
+            </Button>
+
             <Button variant="ghost" className="relative p-2">
               <User className="h-5 w-5" />
               <span className="hidden md:inline ml-1 text-sm">Sign In</span>
             </Button>
 
-            <Button variant="ghost" className="relative p-2" onClick={() => {}}>
+            <Button variant="ghost" className="relative p-2" onClick={() => setCartOpen(true)}>
               <ShoppingCart className="h-5 w-5" />
               {cartCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-orange-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
@@ -190,7 +579,7 @@ export default function EcommerceMarketplace() {
             return (
               <button
                 key={cat.name}
-                onClick={() => setActiveCategory(activeCategory === cat.name ? null : cat.name)}
+                onClick={() => setActiveCategory(cat.name)}
                 className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition-all shrink-0
                   ${activeCategory === cat.name
                     ? 'bg-orange-500 text-white shadow-md'
@@ -212,22 +601,50 @@ export default function EcommerceMarketplace() {
         {/* ============================================================ */}
         <section className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           {/* Main Banner */}
-          <div className="lg:col-span-2 relative rounded-2xl overflow-hidden">
-            <div className={`bg-gradient-to-r ${banners[activeBanner].gradient} p-8 md:p-12 min-h-[280px] flex flex-col justify-center`}>
-              <span className="text-white/80 text-sm font-semibold uppercase tracking-wider">Limited Time</span>
-              <h1 className="text-3xl md:text-4xl font-bold text-white mt-2">{banners[activeBanner].title}</h1>
-              <p className="text-white/90 text-lg mt-2">{banners[activeBanner].subtitle}</p>
-              <Button className="mt-6 bg-white text-gray-900 hover:bg-gray-100 font-semibold px-8 w-fit">
-                {banners[activeBanner].cta} <ArrowRight className="h-4 w-4 ml-2" />
-              </Button>
+          <div className="lg:col-span-2 relative rounded-2xl overflow-hidden group cursor-pointer">
+            <div className="relative min-h-[280px] overflow-hidden">
+              <img
+                src={banners[activeBanner].image}
+                alt={banners[activeBanner].title}
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className={`absolute inset-0 bg-gradient-to-r ${banners[activeBanner].gradient} opacity-75`} />
+              <div className="relative p-8 md:p-12 flex flex-col justify-center min-h-[280px]">
+                <span className="text-white/80 text-sm font-semibold uppercase tracking-wider">Limited Time</span>
+                <h1 className="text-3xl md:text-4xl font-bold text-white mt-2">{banners[activeBanner].title}</h1>
+                <p className="text-white/90 text-lg mt-2">{banners[activeBanner].subtitle}</p>
+                <Button
+                  className="mt-6 bg-white text-gray-900 hover:bg-gray-100 font-semibold px-8 w-fit"
+                  onClick={() => {
+                    if (activeBanner === 0) setActiveCategory('Electronics')
+                    else if (activeBanner === 1) setActiveCategory('Fashion')
+                    else setActiveCategory('Home & Garden')
+                  }}
+                >
+                  {banners[activeBanner].cta} <ArrowRight className="h-4 w-4 ml-2" />
+                </Button>
+              </div>
             </div>
+            {/* Navigation arrows */}
+            <button
+              onClick={(e) => { e.stopPropagation(); setActiveBanner(prev => (prev - 1 + 3) % 3) }}
+              className="absolute left-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/30 hover:bg-black/50 text-white transition-colors opacity-0 group-hover:opacity-100"
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </button>
+            <button
+              onClick={(e) => { e.stopPropagation(); setActiveBanner(prev => (prev + 1) % 3) }}
+              className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-black/30 hover:bg-black/50 text-white transition-colors opacity-0 group-hover:opacity-100"
+            >
+              <ChevronRight className="h-5 w-5" />
+            </button>
             {/* Dots */}
             <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
               {banners.map((_, i) => (
                 <button
                   key={i}
-                  onClick={() => setActiveBanner(i)}
-                  className={`h-2.5 rounded-full transition-all ${i === activeBanner ? 'w-8 bg-white' : 'w-2.5 bg-white/50'}`}
+                  onClick={(e) => { e.stopPropagation(); setActiveBanner(i) }}
+                  className={`h-2.5 rounded-full transition-all ${i === activeBanner ? 'w-8 bg-white' : 'w-2.5 bg-white/50 hover:bg-white/70'}`}
                 />
               ))}
             </div>
@@ -235,22 +652,36 @@ export default function EcommerceMarketplace() {
 
           {/* Side Promo Cards */}
           <div className="flex flex-col gap-4">
-            <div className="flex-1 bg-gradient-to-br from-pink-500 to-rose-600 rounded-2xl p-6 flex flex-col justify-center text-white">
-              <Shirt className="h-8 w-8 mb-2 opacity-80" />
-              <h3 className="text-lg font-bold">Fashion Week Deals</h3>
-              <p className="text-white/80 text-sm mt-1">Up to 50% off top brands</p>
-              <Button variant="outline" className="mt-3 border-white/40 text-white hover:bg-white/20 w-fit text-sm">
-                Shop Fashion
-              </Button>
-            </div>
-            <div className="flex-1 bg-gradient-to-br from-violet-500 to-purple-700 rounded-2xl p-6 flex flex-col justify-center text-white">
-              <Package className="h-8 w-8 mb-2 opacity-80" />
-              <h3 className="text-lg font-bold">New Arrivals Daily</h3>
-              <p className="text-white/80 text-sm mt-1">Fresh finds every day</p>
-              <Button variant="outline" className="mt-3 border-white/40 text-white hover:bg-white/20 w-fit text-sm">
-                Discover New
-              </Button>
-            </div>
+            <button
+              onClick={() => setActiveCategory('Fashion')}
+              className="flex-1 relative rounded-2xl overflow-hidden group text-left"
+            >
+              <img src="https://images.unsplash.com/photo-1445205170230-053b83016050?w=400&h=250&fit=crop" alt="Fashion" className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+              <div className="absolute inset-0 bg-gradient-to-br from-pink-500/80 to-rose-600/80" />
+              <div className="relative p-6 flex flex-col justify-center min-h-[130px]">
+                <Shirt className="h-8 w-8 mb-2 opacity-80 text-white" />
+                <h3 className="text-lg font-bold text-white">Fashion Week Deals</h3>
+                <p className="text-white/80 text-sm mt-1">Up to 50% off top brands</p>
+                <span className="mt-3 inline-flex items-center gap-1 text-white text-sm font-medium group-hover:gap-2 transition-all">
+                  Shop Fashion <ArrowRight className="h-4 w-4" />
+                </span>
+              </div>
+            </button>
+            <button
+              onClick={() => setActiveCategory('All')}
+              className="flex-1 relative rounded-2xl overflow-hidden group text-left"
+            >
+              <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=400&h=250&fit=crop" alt="New Arrivals" className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+              <div className="absolute inset-0 bg-gradient-to-br from-violet-500/80 to-purple-700/80" />
+              <div className="relative p-6 flex flex-col justify-center min-h-[130px]">
+                <Package className="h-8 w-8 mb-2 opacity-80 text-white" />
+                <h3 className="text-lg font-bold text-white">New Arrivals Daily</h3>
+                <p className="text-white/80 text-sm mt-1">Fresh finds every day</p>
+                <span className="mt-3 inline-flex items-center gap-1 text-white text-sm font-medium group-hover:gap-2 transition-all">
+                  Discover New <ArrowRight className="h-4 w-4" />
+                </span>
+              </div>
+            </button>
           </div>
         </section>
 
@@ -266,7 +697,7 @@ export default function EcommerceMarketplace() {
               </h2>
               <div className="flex items-center gap-1 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 rounded-lg px-3 py-1.5 text-sm font-mono font-bold">
                 <Clock className="h-3.5 w-3.5 mr-1" />
-                05 : 23 : 41
+                {String(countdown.hours).padStart(2, '0')} : {String(countdown.minutes).padStart(2, '0')} : {String(countdown.seconds).padStart(2, '0')}
               </div>
             </div>
             <Button variant="ghost" className="text-orange-500 hover:text-orange-600 font-medium">
@@ -274,19 +705,29 @@ export default function EcommerceMarketplace() {
             </Button>
           </div>
 
-          <div className="flex gap-4 overflow-x-auto pb-2">
-            {flashDeals.map((deal, i) => (
+          <div className="flex gap-4 overflow-x-auto pb-2 scroll-smooth">
+            {flashDeals.map((deal) => (
               <Card
-                key={i}
-                className="min-w-[200px] max-w-[200px] shrink-0 group hover:shadow-lg transition-all border-gray-200 dark:border-gray-800 overflow-hidden"
+                key={deal.id}
+                onClick={() => setSelectedProduct(deal)}
+                className="min-w-[200px] max-w-[200px] shrink-0 group hover:shadow-lg transition-all border-gray-200 dark:border-gray-800 overflow-hidden cursor-pointer"
               >
-                <div className={`h-40 bg-gradient-to-br ${deal.gradient} relative flex items-center justify-center`}>
-                  <ShoppingBag className="h-12 w-12 text-white/30" />
+                <div className="h-40 relative overflow-hidden">
+                  <img src={deal.image} alt={deal.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
                   <Badge className="absolute top-2 left-2 bg-red-500 text-white border-0 text-xs font-bold">
                     -{deal.discount}%
                   </Badge>
-                  <button className="absolute top-2 right-2 p-1.5 rounded-full bg-white/20 hover:bg-white/40 transition-colors">
-                    <Heart className="h-4 w-4 text-white" />
+                  <button
+                    onClick={(e) => { e.stopPropagation(); toggleWishlist(deal.id) }}
+                    className="absolute top-2 right-2 p-1.5 rounded-full bg-white/80 dark:bg-black/40 hover:bg-white dark:hover:bg-black/60 transition-colors"
+                  >
+                    <Heart className={`h-4 w-4 ${wishlist.has(deal.id) ? 'fill-red-500 text-red-500' : 'text-gray-600 dark:text-white'}`} />
+                  </button>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); handleAddToCart(deal) }}
+                    className="absolute bottom-2 right-2 p-2 rounded-full bg-orange-500 text-white opacity-0 group-hover:opacity-100 hover:bg-orange-600 transition-all transform translate-y-2 group-hover:translate-y-0 shadow-lg"
+                  >
+                    <ShoppingCart className="h-4 w-4" />
                   </button>
                 </div>
                 <CardContent className="p-3">
@@ -299,6 +740,13 @@ export default function EcommerceMarketplace() {
                     <StarRating rating={deal.rating} />
                     <span className="text-xs text-gray-500 dark:text-gray-400">({deal.sold.toLocaleString()} sold)</span>
                   </div>
+                  {/* Progress bar showing stock */}
+                  <div className="mt-2">
+                    <div className="h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                      <div className="h-full bg-gradient-to-r from-orange-500 to-red-500 rounded-full" style={{ width: `${Math.min(90, (deal.sold / 60))}%` }} />
+                    </div>
+                    <p className="text-[10px] text-gray-400 mt-0.5">{deal.sold.toLocaleString()} sold</p>
+                  </div>
                 </CardContent>
               </Card>
             ))}
@@ -310,17 +758,24 @@ export default function EcommerceMarketplace() {
         {/* ============================================================ */}
         <section>
           <h2 className="text-2xl font-bold mb-4">Shop by Category</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-            {categories.slice(0, 8).map((cat) => {
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+            {categories.filter(c => c.name !== 'All').map((cat) => {
               const Icon = cat.icon
               return (
                 <Card
                   key={cat.name}
-                  className="group hover:shadow-lg hover:border-orange-300 dark:hover:border-orange-600 transition-all cursor-pointer border-gray-200 dark:border-gray-800"
+                  onClick={() => setActiveCategory(cat.name)}
+                  className={`group hover:shadow-lg transition-all cursor-pointer border-gray-200 dark:border-gray-800 ${
+                    activeCategory === cat.name ? 'ring-2 ring-orange-500 border-orange-300 dark:border-orange-600' : 'hover:border-orange-300 dark:hover:border-orange-600'
+                  }`}
                 >
                   <CardContent className="p-5 flex flex-col items-center text-center">
-                    <div className="h-14 w-14 rounded-2xl bg-orange-50 dark:bg-orange-950 flex items-center justify-center mb-3 group-hover:bg-orange-100 dark:group-hover:bg-orange-900 transition-colors">
-                      <Icon className="h-7 w-7 text-orange-500" />
+                    <div className={`h-14 w-14 rounded-2xl flex items-center justify-center mb-3 transition-colors ${
+                      activeCategory === cat.name
+                        ? 'bg-orange-500 text-white'
+                        : 'bg-orange-50 dark:bg-orange-950 group-hover:bg-orange-100 dark:group-hover:bg-orange-900'
+                    }`}>
+                      <Icon className={`h-7 w-7 ${activeCategory === cat.name ? 'text-white' : 'text-orange-500'}`} />
                     </div>
                     <h3 className="font-semibold text-sm">{cat.name}</h3>
                     <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{cat.items} items</p>
@@ -335,59 +790,97 @@ export default function EcommerceMarketplace() {
         {/*  FEATURED / RECOMMENDED PRODUCTS                              */}
         {/* ============================================================ */}
         <section>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-bold">Recommended For You</h2>
-            <Button variant="ghost" className="text-orange-500 hover:text-orange-600 font-medium">
-              View All <ChevronRight className="h-4 w-4 ml-1" />
-            </Button>
+          <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
+            <h2 className="text-2xl font-bold">
+              {activeCategory === 'All' ? 'Recommended For You' : activeCategory}
+              {searchQuery && <span className="text-base font-normal text-gray-500 ml-2">results for "{searchQuery}"</span>}
+            </h2>
+            <div className="flex items-center gap-3">
+              <span className="text-sm text-gray-500">{sortedProducts.length} products</span>
+              <select
+                value={sortBy}
+                onChange={e => setSortBy(e.target.value)}
+                className="h-9 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-sm px-3 pr-8 cursor-pointer focus:outline-none focus:ring-2 focus:ring-orange-500"
+              >
+                <option value="recommended">Recommended</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+                <option value="rating">Highest Rated</option>
+                <option value="reviews">Most Reviews</option>
+              </select>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {featuredProducts.map((product, i) => (
-              <Card
-                key={i}
-                className="group overflow-hidden hover:shadow-xl transition-all duration-300 border-gray-200 dark:border-gray-800"
-                onMouseEnter={() => setHoveredProduct(i)}
-                onMouseLeave={() => setHoveredProduct(null)}
-              >
-                <div className={`h-48 bg-gradient-to-br ${product.gradient} relative flex items-center justify-center`}>
-                  <ShoppingBag className="h-14 w-14 text-white/20" />
-                  {product.freeShipping && (
-                    <Badge className="absolute top-2 left-2 bg-green-500 text-white border-0 text-xs">
-                      <Truck className="h-3 w-3 mr-1" /> Free Shipping
-                    </Badge>
-                  )}
-                  <button className="absolute top-2 right-2 p-1.5 rounded-full bg-white/20 hover:bg-white/40 transition-colors">
-                    <Heart className="h-4 w-4 text-white" />
-                  </button>
-                  <div className={`absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/40 to-transparent p-3 transform transition-transform duration-300 ${hoveredProduct === i ? 'translate-y-0' : 'translate-y-full'}`}>
-                    <Button
-                      onClick={handleAddToCart}
-                      className="w-full bg-orange-500 hover:bg-orange-600 text-white text-sm"
+          {sortedProducts.length === 0 ? (
+            <div className="text-center py-16 bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800">
+              <Search className="h-16 w-16 mx-auto text-gray-300 dark:text-gray-700 mb-4" />
+              <p className="text-gray-500 text-lg">No products found</p>
+              <p className="text-gray-400 text-sm mt-1">Try a different search term or category</p>
+              <Button onClick={() => { setActiveCategory('All'); setSearchQuery('') }} className="mt-4 bg-orange-500 hover:bg-orange-600 text-white">
+                View All Products
+              </Button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {sortedProducts.map((product, i) => (
+                <Card
+                  key={product.id}
+                  className="group overflow-hidden hover:shadow-xl transition-all duration-300 border-gray-200 dark:border-gray-800 cursor-pointer"
+                  onClick={() => setSelectedProduct(product)}
+                  onMouseEnter={() => setHoveredProduct(i)}
+                  onMouseLeave={() => setHoveredProduct(null)}
+                >
+                  <div className="h-48 relative overflow-hidden">
+                    <img src={product.image} alt={product.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                    {product.freeShipping && (
+                      <Badge className="absolute top-2 left-2 bg-green-500 text-white border-0 text-xs">
+                        <Truck className="h-3 w-3 mr-1" /> Free Shipping
+                      </Badge>
+                    )}
+                    <button
+                      onClick={(e) => { e.stopPropagation(); toggleWishlist(product.id) }}
+                      className="absolute top-2 right-2 p-1.5 rounded-full bg-white/80 dark:bg-black/40 hover:bg-white dark:hover:bg-black/60 transition-colors"
                     >
-                      <ShoppingCart className="h-4 w-4 mr-2" /> Add to Cart
-                    </Button>
+                      <Heart className={`h-4 w-4 ${wishlist.has(product.id) ? 'fill-red-500 text-red-500' : 'text-gray-600 dark:text-white'}`} />
+                    </button>
+                    <div className={`absolute bottom-0 inset-x-0 bg-gradient-to-t from-black/60 to-transparent p-3 transform transition-all duration-300 ${hoveredProduct === i ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0'}`}>
+                      <div className="flex gap-2">
+                        <Button
+                          onClick={(e) => { e.stopPropagation(); handleAddToCart(product) }}
+                          className="flex-1 bg-orange-500 hover:bg-orange-600 text-white text-sm h-9"
+                        >
+                          <ShoppingCart className="h-4 w-4 mr-1" /> Add to Cart
+                        </Button>
+                        <Button
+                          onClick={(e) => { e.stopPropagation(); setSelectedProduct(product) }}
+                          variant="secondary"
+                          className="h-9 px-3 bg-white/90 hover:bg-white text-gray-900"
+                        >
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
                   </div>
-                </div>
-                <CardContent className="p-4">
-                  <p className="text-xs text-gray-500 dark:text-gray-400">{product.category}</p>
-                  <h3 className="font-semibold text-sm mt-1 line-clamp-2 min-h-[40px]">{product.name}</h3>
-                  <p className="text-xl font-bold text-orange-500 mt-2">${product.price.toFixed(2)}</p>
-                  <div className="flex items-center gap-1.5 mt-2">
-                    <StarRating rating={product.rating} />
-                    <span className="text-xs text-gray-500 dark:text-gray-400">({product.reviews.toLocaleString()})</span>
-                  </div>
-                  <div className="flex items-center gap-1.5 mt-2 text-xs text-gray-500 dark:text-gray-400">
-                    <Store className="h-3 w-3" />
-                    <span>{product.seller}</span>
-                    <span className="mx-0.5">·</span>
-                    <MapPin className="h-3 w-3" />
-                    <span>{product.location}</span>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                  <CardContent className="p-4">
+                    <p className="text-xs text-gray-500 dark:text-gray-400">{product.category}</p>
+                    <h3 className="font-semibold text-sm mt-1 line-clamp-2 min-h-[40px] group-hover:text-orange-500 transition-colors">{product.name}</h3>
+                    <p className="text-xl font-bold text-orange-500 mt-2">${product.price.toFixed(2)}</p>
+                    <div className="flex items-center gap-1.5 mt-2">
+                      <StarRating rating={product.rating} />
+                      <span className="text-xs text-gray-500 dark:text-gray-400">({product.reviews.toLocaleString()})</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 mt-2 text-xs text-gray-500 dark:text-gray-400">
+                      <Store className="h-3 w-3" />
+                      <span>{product.seller}</span>
+                      <span className="mx-0.5">·</span>
+                      <MapPin className="h-3 w-3" />
+                      <span>{product.location}</span>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
         </section>
 
         {/* ============================================================ */}
@@ -397,12 +890,12 @@ export default function EcommerceMarketplace() {
           <h2 className="text-2xl font-bold mb-4">Top Sellers</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4">
             {topSellers.map((seller, i) => (
-              <Card key={i} className="hover:shadow-lg transition-all border-gray-200 dark:border-gray-800 text-center">
+              <Card key={i} className="hover:shadow-lg transition-all border-gray-200 dark:border-gray-800 text-center cursor-pointer group">
                 <CardContent className="p-4 flex flex-col items-center">
-                  <div className={`h-16 w-16 rounded-full bg-gradient-to-br ${seller.color} flex items-center justify-center text-white font-bold text-xl mb-3`}>
-                    {seller.name.charAt(0)}
+                  <div className="h-16 w-16 rounded-full overflow-hidden mb-3 ring-2 ring-gray-200 dark:ring-gray-700 group-hover:ring-orange-500 transition-all">
+                    <img src={seller.avatar} alt={seller.name} className="w-full h-full object-cover" />
                   </div>
-                  <h3 className="font-semibold text-sm">{seller.name}</h3>
+                  <h3 className="font-semibold text-sm group-hover:text-orange-500 transition-colors">{seller.name}</h3>
                   <div className="flex items-center gap-1 mt-1">
                     <Star className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
                     <span className="text-sm font-medium">{seller.rating}</span>
@@ -422,14 +915,14 @@ export default function EcommerceMarketplace() {
         {/* ============================================================ */}
         <section>
           <h2 className="text-2xl font-bold mb-4">Recently Viewed</h2>
-          <div className="flex gap-4 overflow-x-auto pb-2">
-            {recentlyViewed.map((item, i) => (
-              <Card key={i} className="min-w-[160px] max-w-[160px] shrink-0 hover:shadow-md transition-all border-gray-200 dark:border-gray-800 overflow-hidden cursor-pointer">
-                <div className={`h-28 bg-gradient-to-br ${item.gradient} flex items-center justify-center`}>
-                  <ShoppingBag className="h-8 w-8 text-white/25" />
+          <div className="flex gap-4 overflow-x-auto pb-2 scroll-smooth">
+            {recentlyViewed.map((item) => (
+              <Card key={item.id} className="min-w-[160px] max-w-[160px] shrink-0 hover:shadow-md transition-all border-gray-200 dark:border-gray-800 overflow-hidden cursor-pointer group">
+                <div className="h-28 relative overflow-hidden">
+                  <img src={item.image} alt={item.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
                 </div>
                 <CardContent className="p-3">
-                  <p className="text-xs font-medium line-clamp-1">{item.name}</p>
+                  <p className="text-xs font-medium line-clamp-1 group-hover:text-orange-500 transition-colors">{item.name}</p>
                   <p className="text-sm font-bold text-orange-500 mt-1">${item.price.toFixed(2)}</p>
                 </CardContent>
               </Card>
@@ -447,9 +940,9 @@ export default function EcommerceMarketplace() {
             { icon: RefreshCw, title: 'Easy Returns', desc: '30-day return policy' },
             { icon: Headphones, title: '24/7 Support', desc: 'Always here to help' },
           ].map((badge, i) => (
-            <Card key={i} className="border-gray-200 dark:border-gray-800">
+            <Card key={i} className="border-gray-200 dark:border-gray-800 hover:shadow-md transition-all cursor-pointer group">
               <CardContent className="p-5 flex items-center gap-4">
-                <div className="h-12 w-12 rounded-xl bg-orange-50 dark:bg-orange-950 flex items-center justify-center shrink-0">
+                <div className="h-12 w-12 rounded-xl bg-orange-50 dark:bg-orange-950 flex items-center justify-center shrink-0 group-hover:bg-orange-100 dark:group-hover:bg-orange-900 transition-colors">
                   <badge.icon className="h-6 w-6 text-orange-500" />
                 </div>
                 <div>
@@ -464,35 +957,39 @@ export default function EcommerceMarketplace() {
         {/* ============================================================ */}
         {/*  SELL ON SHOPVERSE CTA                                         */}
         {/* ============================================================ */}
-        <section className="rounded-2xl bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-400 p-8 md:p-12 text-white relative overflow-hidden">
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute top-4 right-10 h-32 w-32 rounded-full border-4 border-white" />
-            <div className="absolute bottom-4 left-20 h-20 w-20 rounded-full border-4 border-white" />
-            <div className="absolute top-10 left-1/2 h-16 w-16 rounded-full border-4 border-white" />
-          </div>
-          <div className="relative z-10 text-center max-w-2xl mx-auto">
-            <h2 className="text-3xl font-bold">Start Selling Today</h2>
-            <p className="text-white/90 mt-2">Reach millions of buyers worldwide. Set up your store in minutes.</p>
-            <div className="flex items-center justify-center gap-8 mt-6">
-              <div>
-                <p className="text-2xl font-bold">500K+</p>
-                <p className="text-sm text-white/80">Sellers</p>
-              </div>
-              <div className="h-8 w-px bg-white/30" />
-              <div>
-                <p className="text-2xl font-bold">10M+</p>
-                <p className="text-sm text-white/80">Products</p>
-              </div>
-              <div className="h-8 w-px bg-white/30" />
-              <div>
-                <p className="text-2xl font-bold">50M+</p>
-                <p className="text-sm text-white/80">Buyers</p>
-              </div>
+        <section className="rounded-2xl relative overflow-hidden">
+          <img src="https://images.unsplash.com/photo-1556740758-90de940ca986?w=1200&h=400&fit=crop" alt="Start selling" className="absolute inset-0 w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-gradient-to-r from-orange-500/90 via-amber-500/90 to-yellow-400/90" />
+          <div className="relative p-8 md:p-12 text-white">
+            <div className="absolute inset-0 opacity-10 pointer-events-none">
+              <div className="absolute top-4 right-10 h-32 w-32 rounded-full border-4 border-white" />
+              <div className="absolute bottom-4 left-20 h-20 w-20 rounded-full border-4 border-white" />
+              <div className="absolute top-10 left-1/2 h-16 w-16 rounded-full border-4 border-white" />
             </div>
-            <Button className="mt-8 bg-white text-orange-600 hover:bg-gray-100 font-bold px-8 text-base h-12">
-              <Store className="h-5 w-5 mr-2" />
-              Create Your Store
-            </Button>
+            <div className="relative z-10 text-center max-w-2xl mx-auto">
+              <h2 className="text-3xl font-bold">Start Selling Today</h2>
+              <p className="text-white/90 mt-2">Reach millions of buyers worldwide. Set up your store in minutes.</p>
+              <div className="flex items-center justify-center gap-8 mt-6">
+                <div>
+                  <p className="text-2xl font-bold">500K+</p>
+                  <p className="text-sm text-white/80">Sellers</p>
+                </div>
+                <div className="h-8 w-px bg-white/30" />
+                <div>
+                  <p className="text-2xl font-bold">10M+</p>
+                  <p className="text-sm text-white/80">Products</p>
+                </div>
+                <div className="h-8 w-px bg-white/30" />
+                <div>
+                  <p className="text-2xl font-bold">50M+</p>
+                  <p className="text-sm text-white/80">Buyers</p>
+                </div>
+              </div>
+              <Button className="mt-8 bg-white text-orange-600 hover:bg-gray-100 font-bold px-8 text-base h-12">
+                <Store className="h-5 w-5 mr-2" />
+                Create Your Store
+              </Button>
+            </div>
           </div>
         </section>
 
@@ -532,11 +1029,13 @@ export default function EcommerceMarketplace() {
             <div>
               <h4 className="text-white font-semibold mb-4">Categories</h4>
               <ul className="space-y-2 text-sm">
-                <li><a href="#" className="hover:text-orange-400 transition-colors">Electronics</a></li>
-                <li><a href="#" className="hover:text-orange-400 transition-colors">Fashion</a></li>
-                <li><a href="#" className="hover:text-orange-400 transition-colors">Home & Garden</a></li>
-                <li><a href="#" className="hover:text-orange-400 transition-colors">Sports</a></li>
-                <li><a href="#" className="hover:text-orange-400 transition-colors">Beauty</a></li>
+                {categories.filter(c => c.name !== 'All').slice(0, 5).map(cat => (
+                  <li key={cat.name}>
+                    <button onClick={() => { setActiveCategory(cat.name); window.scrollTo({ top: 0, behavior: 'smooth' }) }} className="hover:text-orange-400 transition-colors">
+                      {cat.name}
+                    </button>
+                  </li>
+                ))}
               </ul>
             </div>
 
@@ -545,15 +1044,15 @@ export default function EcommerceMarketplace() {
               <h4 className="text-white font-semibold mb-4">Payment Methods</h4>
               <div className="flex flex-wrap gap-2">
                 {['Visa', 'Mastercard', 'PayPal', 'Apple Pay', 'Google Pay'].map(method => (
-                  <span key={method} className="text-xs bg-gray-800 dark:bg-gray-900 px-3 py-1.5 rounded-md border border-gray-700">
+                  <span key={method} className="text-xs bg-gray-800 dark:bg-gray-900 px-3 py-1.5 rounded-md border border-gray-700 hover:border-orange-500 transition-colors cursor-default">
                     {method}
                   </span>
                 ))}
               </div>
               <h4 className="text-white font-semibold mt-6 mb-3">Download App</h4>
               <div className="flex flex-col gap-2">
-                <span className="text-xs bg-gray-800 dark:bg-gray-900 px-3 py-2 rounded-md border border-gray-700 text-center cursor-pointer hover:border-orange-500 transition-colors">App Store</span>
-                <span className="text-xs bg-gray-800 dark:bg-gray-900 px-3 py-2 rounded-md border border-gray-700 text-center cursor-pointer hover:border-orange-500 transition-colors">Google Play</span>
+                <button className="text-xs bg-gray-800 dark:bg-gray-900 px-3 py-2 rounded-md border border-gray-700 text-center cursor-pointer hover:border-orange-500 hover:text-orange-400 transition-colors">App Store</button>
+                <button className="text-xs bg-gray-800 dark:bg-gray-900 px-3 py-2 rounded-md border border-gray-700 text-center cursor-pointer hover:border-orange-500 hover:text-orange-400 transition-colors">Google Play</button>
               </div>
             </div>
 
@@ -585,6 +1084,25 @@ export default function EcommerceMarketplace() {
           </div>
         </div>
       </footer>
+
+      {/* ============================================================ */}
+      {/*  MODALS & DRAWERS                                              */}
+      {/* ============================================================ */}
+      <ProductModal
+        product={selectedProduct}
+        onClose={() => setSelectedProduct(null)}
+        onAddToCart={handleAddToCart}
+        isInWishlist={selectedProduct ? wishlist.has(selectedProduct.id) : false}
+        onToggleWishlist={toggleWishlist}
+      />
+
+      <CartDrawer
+        isOpen={cartOpen}
+        onClose={() => setCartOpen(false)}
+        items={cartItems}
+        onUpdateQty={handleUpdateCartQty}
+        onRemove={handleRemoveFromCart}
+      />
     </div>
   )
 }
