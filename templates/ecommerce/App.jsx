@@ -32,29 +32,7 @@ const categories = [
   { name: 'Groceries', icon: Leaf, items: '7K' },
 ]
 
-const flashDeals = [
-  { id: 'fd1', name: 'Wireless Earbuds Pro', price: 29.99, original: 49.99, discount: 40, rating: 4.5, sold: 2341, category: 'Electronics', image: 'https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?w=400&h=400&fit=crop' },
-  { id: 'fd2', name: 'Smart Watch Ultra', price: 89.00, original: 149.00, discount: 40, rating: 4.7, sold: 1822, category: 'Electronics', image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop' },
-  { id: 'fd3', name: 'Running Shoes Air', price: 45.00, original: 79.00, discount: 43, rating: 4.3, sold: 3105, category: 'Sports', image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=400&fit=crop' },
-  { id: 'fd4', name: 'Leather Travel Backpack', price: 25.00, original: 55.00, discount: 55, rating: 4.6, sold: 1567, category: 'Fashion', image: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400&h=400&fit=crop' },
-  { id: 'fd5', name: 'Bluetooth Speaker', price: 35.00, original: 59.00, discount: 41, rating: 4.4, sold: 2890, category: 'Electronics', image: 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400&h=400&fit=crop' },
-  { id: 'fd6', name: 'Phone Case Premium', price: 12.00, original: 24.00, discount: 50, rating: 4.2, sold: 5420, category: 'Electronics', image: 'https://images.unsplash.com/photo-1601784551446-20c9e07cdbdb?w=400&h=400&fit=crop' },
-]
-
-const featuredProducts = [
-  { id: 'fp1', name: 'Sony WH-1000XM5 Headphones', price: 79.99, rating: 4.8, reviews: 1243, seller: 'TechZone', location: 'San Francisco', freeShipping: true, category: 'Electronics', image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop', description: 'Industry-leading noise cancellation with exceptional sound quality. 30-hour battery life, comfortable fit for all-day wear.' },
-  { id: 'fp2', name: 'Cotton Oversized Hoodie', price: 34.99, rating: 4.5, reviews: 892, seller: 'FashionHub', location: 'New York', freeShipping: true, category: 'Fashion', image: 'https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400&h=400&fit=crop', description: 'Ultra-soft cotton blend hoodie with a relaxed oversized fit. Perfect for layering or wearing solo.' },
-  { id: 'fp3', name: 'Ceramic Plant Pot Set', price: 28.50, rating: 4.6, reviews: 567, seller: 'HomeStyle', location: 'Portland', freeShipping: false, category: 'Home & Garden', image: 'https://images.unsplash.com/photo-1485955900006-10f4d324d411?w=400&h=400&fit=crop', description: 'Set of 3 handcrafted ceramic pots with drainage holes. Minimalist design fits any home decor.' },
-  { id: 'fp4', name: 'Premium Yoga Mat 6mm', price: 42.00, rating: 4.7, reviews: 2103, seller: 'SportsPro', location: 'Denver', freeShipping: true, category: 'Sports', image: 'https://images.unsplash.com/photo-1601925260368-ae2f83cf8b7f?w=400&h=400&fit=crop', description: 'Eco-friendly TPE material with superior grip. Non-slip surface and alignment guides for perfect practice.' },
-  { id: 'fp5', name: 'Vitamin C Serum 30ml', price: 18.99, rating: 4.9, reviews: 3421, seller: 'BeautyBox', location: 'Los Angeles', freeShipping: false, category: 'Beauty', image: 'https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=400&h=400&fit=crop', description: 'Brightening serum with 20% Vitamin C, Hyaluronic Acid, and Vitamin E. Dermatologist tested.' },
-  { id: 'fp6', name: 'Mechanical Keyboard RGB', price: 65.00, rating: 4.6, reviews: 1876, seller: 'TechZone', location: 'San Francisco', freeShipping: true, category: 'Electronics', image: 'https://images.unsplash.com/photo-1618384887929-16ec33fab9ef?w=400&h=400&fit=crop', description: 'Hot-swappable switches, per-key RGB lighting, and a premium aluminum frame. Cherry MX compatible.' },
-  { id: 'fp7', name: 'Leather Crossbody Bag', price: 55.00, rating: 4.4, reviews: 743, seller: 'FashionHub', location: 'New York', freeShipping: true, category: 'Fashion', image: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=400&h=400&fit=crop', description: 'Genuine leather crossbody with adjustable strap. Multiple compartments for everyday essentials.' },
-  { id: 'fp8', name: 'LED Desk Lamp Touch', price: 32.99, rating: 4.5, reviews: 1102, seller: 'HomeStyle', location: 'Portland', freeShipping: false, category: 'Home & Garden', image: 'https://images.unsplash.com/photo-1507473885765-e6ed057ab6fe?w=400&h=400&fit=crop', description: 'Touch-sensitive LED lamp with 5 brightness levels and 3 color temperatures. USB charging port included.' },
-  { id: 'fp9', name: 'Resistance Bands Set', price: 19.99, rating: 4.3, reviews: 2567, seller: 'SportsPro', location: 'Denver', freeShipping: true, category: 'Sports', image: 'https://images.unsplash.com/photo-1598289431512-b97b0917affc?w=400&h=400&fit=crop', description: 'Set of 5 resistance bands with different levels. Includes door anchor, handles, and carry bag.' },
-  { id: 'fp10', name: 'Stainless Steel Water Bottle', price: 24.99, rating: 4.7, reviews: 4231, seller: 'HomeStyle', location: 'Portland', freeShipping: true, category: 'Home & Garden', image: 'https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=400&h=400&fit=crop', description: 'Double-wall vacuum insulated. Keeps drinks cold 24hrs or hot 12hrs. BPA-free, leak-proof lid.' },
-  { id: 'fp11', name: 'Wireless Charging Pad', price: 22.00, rating: 4.4, reviews: 1654, seller: 'TechZone', location: 'San Francisco', freeShipping: false, category: 'Electronics', image: 'https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=400&h=400&fit=crop', description: '15W fast wireless charger compatible with all Qi devices. Slim, anti-slip design with LED indicator.' },
-  { id: 'fp12', name: 'Scented Candle Gift Set', price: 29.99, rating: 4.8, reviews: 987, seller: 'HomeStyle', location: 'Portland', freeShipping: true, category: 'Home & Garden', image: 'https://images.unsplash.com/photo-1602607688066-8919935a44f8?w=400&h=400&fit=crop', description: 'Set of 4 hand-poured soy candles in Lavender, Vanilla, Citrus, and Sandalwood. 40hr burn each.' },
-]
+/* flashDeals and featuredProducts are now fetched from the API */
 
 const topSellers = [
   { name: 'TechZone', rating: 4.9, products: 1240, avatar: 'https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=100&h=100&fit=crop' },
@@ -306,7 +284,7 @@ function ProductModal({ product, onClose, onAddToCart, isInWishlist, onToggleWis
 /*  COMPONENT: Cart Drawer                                             */
 /* ------------------------------------------------------------------ */
 
-function CartDrawer({ isOpen, onClose, items, onUpdateQty, onRemove }) {
+function CartDrawer({ isOpen, onClose, items, onUpdateQty, onRemove, onCheckout, checkingOut }) {
   const total = items.reduce((sum, item) => sum + item.price * item.qty, 0)
 
   if (!isOpen) return null
@@ -377,8 +355,12 @@ function CartDrawer({ isOpen, onClose, items, onUpdateQty, onRemove }) {
               <span>Total</span>
               <span className="text-orange-500">${(total + (total >= 50 ? 0 : 4.99)).toFixed(2)}</span>
             </div>
-            <Button className="w-full h-12 bg-orange-500 hover:bg-orange-600 text-white font-bold text-base">
-              Checkout
+            <Button
+              onClick={onCheckout}
+              disabled={checkingOut}
+              className="w-full h-12 bg-orange-500 hover:bg-orange-600 text-white font-bold text-base disabled:opacity-50"
+            >
+              {checkingOut ? 'Processing...' : 'Checkout'}
             </Button>
           </div>
         )}
@@ -404,7 +386,92 @@ export default function EcommerceMarketplace({ onNavigate }) {
   const [cartOpen, setCartOpen] = useState(false)
   const [sortBy, setSortBy] = useState('recommended')
   const [notification, setNotification] = useState(null)
+  const [products, setProducts] = useState([])
+  const [projectId, setProjectId] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [checkingOut, setCheckingOut] = useState(false)
   const countdown = useCountdown()
+
+  // Map API product to template format
+  const mapProduct = (p) => ({
+    id: p.id,
+    name: p.name,
+    price: parseFloat(p.price),
+    original: p.compare_at_price ? parseFloat(p.compare_at_price) : null,
+    discount: p.discount_percent || 0,
+    rating: p.rating || 0,
+    reviews: p.reviews_count || 0,
+    sold: p.sold_count || 0,
+    seller: p.seller?.name || 'VA Store',
+    location: p.seller?.location || '',
+    freeShipping: p.free_shipping || false,
+    category: p.category?.name || 'General',
+    image: p.featured_image || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400',
+    description: p.description || '',
+  })
+
+  // Fetch products from API
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = localStorage.getItem('va-access-token')
+        const headers = token ? { Authorization: `Bearer ${token}` } : {}
+
+        // Get ecommerce project
+        const projRes = await fetch('/api/v1/projects/public', { headers })
+        const projData = await projRes.json()
+        const projects = projData.items || projData || []
+        const ecomProject = projects.find(p => p.template_type === 'ecommerce')
+        if (!ecomProject) { setLoading(false); return }
+        setProjectId(ecomProject.id)
+
+        // Get products (public endpoint)
+        const prodRes = await fetch(`/api/v1/ecommerce/projects/${ecomProject.id}/products/public`)
+        const prodData = await prodRes.json()
+        setProducts(prodData.items || prodData || [])
+      } catch (err) {
+        console.error('Failed to fetch products:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchData()
+  }, [])
+
+  // Derive mapped product arrays from API data
+  const mappedProducts = products.map(mapProduct)
+  const featuredProducts = mappedProducts
+  const flashDeals = mappedProducts.filter(p => p.discount > 0).slice(0, 6)
+
+  // Fetch cart from API
+  const fetchCart = useCallback(async () => {
+    if (!isAuthenticated || !projectId) return
+    try {
+      const token = localStorage.getItem('va-access-token')
+      const res = await fetch(`/api/v1/ecommerce/projects/${projectId}/cart`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      if (res.ok) {
+        const data = await res.json()
+        const items = (data.items || []).map(item => ({
+          id: item.id,
+          product_id: item.product_id,
+          name: item.product?.name || 'Product',
+          price: parseFloat(item.unit_price),
+          image: item.product?.featured_image || 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400',
+          qty: item.quantity,
+        }))
+        setCartItems(items)
+      }
+    } catch (err) {
+      console.error('Fetch cart failed:', err)
+    }
+  }, [isAuthenticated, projectId])
+
+  // Load cart when projectId is available and user is authenticated
+  useEffect(() => {
+    fetchCart()
+  }, [fetchCart])
 
   // Auto-rotate banner
   useEffect(() => {
@@ -425,31 +492,88 @@ export default function EcommerceMarketplace({ onNavigate }) {
     setTimeout(() => setNotification(null), 2500)
   }, [])
 
-  const handleAddToCart = useCallback((product, qty = 1) => {
-    setCartItems(prev => {
-      const existing = prev.findIndex(item => item.id === product.id)
-      if (existing >= 0) {
-        const updated = [...prev]
-        updated[existing] = { ...updated[existing], qty: updated[existing].qty + qty }
-        return updated
+  const handleAddToCart = useCallback(async (product, qty = 1) => {
+    if (!isAuthenticated) {
+      onNavigate && onNavigate('login')
+      return
+    }
+    if (!projectId) return
+
+    try {
+      const token = localStorage.getItem('va-access-token')
+      const res = await fetch(`/api/v1/ecommerce/projects/${projectId}/cart/items`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ product_id: product.id, quantity: qty }),
+      })
+      if (res.ok) {
+        await fetchCart()
+        showNotification(`${product.name} added to cart!`)
       }
-      return [...prev, { id: product.id, name: product.name, price: product.price, image: product.image, qty }]
-    })
-    showNotification(`${product.name} added to cart!`)
-  }, [showNotification])
+    } catch (err) {
+      console.error('Add to cart failed:', err)
+    }
+  }, [isAuthenticated, projectId, onNavigate, showNotification, fetchCart])
 
-  const handleUpdateCartQty = (idx, newQty) => {
+  const handleUpdateCartQty = useCallback(async (idx, newQty) => {
     if (newQty < 1) return
-    setCartItems(prev => {
-      const updated = [...prev]
-      updated[idx] = { ...updated[idx], qty: newQty }
-      return updated
-    })
-  }
+    const item = cartItems[idx]
+    if (!item || !projectId) return
 
-  const handleRemoveFromCart = (idx) => {
-    setCartItems(prev => prev.filter((_, i) => i !== idx))
-  }
+    try {
+      const token = localStorage.getItem('va-access-token')
+      const res = await fetch(`/api/v1/ecommerce/projects/${projectId}/cart/items/${item.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ quantity: newQty }),
+      })
+      if (res.ok) {
+        await fetchCart()
+      }
+    } catch (err) {
+      console.error('Update cart failed:', err)
+    }
+  }, [cartItems, projectId, fetchCart])
+
+  const handleRemoveFromCart = useCallback(async (idx) => {
+    const item = cartItems[idx]
+    if (!item || !projectId) return
+
+    try {
+      const token = localStorage.getItem('va-access-token')
+      const res = await fetch(`/api/v1/ecommerce/projects/${projectId}/cart/items/${item.id}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      if (res.ok) {
+        await fetchCart()
+      }
+    } catch (err) {
+      console.error('Remove from cart failed:', err)
+    }
+  }, [cartItems, projectId, fetchCart])
+
+  const handleCheckout = useCallback(async () => {
+    if (!isAuthenticated || !projectId) return
+    setCheckingOut(true)
+    try {
+      const token = localStorage.getItem('va-access-token')
+      const res = await fetch(`/api/v1/ecommerce/projects/${projectId}/checkout`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ customer_email: user?.email }),
+      })
+      if (res.ok) {
+        setCartItems([])
+        setCartOpen(false)
+        showNotification('Order placed!')
+      }
+    } catch (err) {
+      console.error('Checkout failed:', err)
+    } finally {
+      setCheckingOut(false)
+    }
+  }, [isAuthenticated, projectId, user, showNotification])
 
   const toggleWishlist = useCallback((productId) => {
     setWishlist(prev => {
@@ -485,6 +609,16 @@ export default function EcommerceMarketplace({ onNavigate }) {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100">
+
+      {/* Loading Overlay */}
+      {loading && (
+        <div className="fixed inset-0 z-[70] bg-white/80 dark:bg-gray-950/80 flex items-center justify-center">
+          <div className="flex flex-col items-center gap-3">
+            <div className="h-10 w-10 border-4 border-orange-500 border-t-transparent rounded-full animate-spin" />
+            <span className="text-sm text-gray-500 font-medium">Loading products...</span>
+          </div>
+        </div>
+      )}
 
       {/* Notification Toast */}
       {notification && (
@@ -1168,6 +1302,8 @@ export default function EcommerceMarketplace({ onNavigate }) {
         items={cartItems}
         onUpdateQty={handleUpdateCartQty}
         onRemove={handleRemoveFromCart}
+        onCheckout={handleCheckout}
+        checkingOut={checkingOut}
       />
     </div>
   )
