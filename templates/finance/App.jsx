@@ -4,7 +4,8 @@ import {
   Menu, X, Bell, Download, ArrowUpRight, ArrowDownRight, DollarSign, Plus,
   CreditCard, Home, Utensils, Car, Film, Zap, Search, Filter, Building2,
   ShoppingCart, Briefcase, Send, ChevronRight, User, LogOut, AlertTriangle,
-  FileText, Landmark, CircleDollarSign, ArrowRightLeft, Coffee, Wifi, Plane
+  FileText, Landmark, CircleDollarSign, ArrowRightLeft, Coffee, Wifi, Plane,
+  ShieldCheck, Sparkles, RefreshCw, Globe
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -35,10 +36,10 @@ const sidebarSections = [
 ]
 
 const accountCards = [
-  { label: 'Checking', number: '****4821', value: 124500, icon: Wallet, color: 'from-teal-500 to-cyan-600', trend: '+2.4%', up: true },
-  { label: 'Savings', number: '****7392', value: 342800, icon: PiggyBank, color: 'from-emerald-500 to-green-600', trend: '+5.1%', up: true },
-  { label: 'Investment', number: '****9156', value: 891200, icon: TrendingUp, color: 'from-violet-500 to-purple-600', trend: '+12.8%', up: true },
-  { label: 'Credit Card', number: '****3047', value: -4230, icon: CreditCard, color: 'from-red-500 to-rose-600', trend: '-18.2%', up: false },
+  { label: 'Checking',    number: '•••• 4821', value:  124500, icon: Wallet,     color: 'from-slate-700 to-slate-900',   trend: '+2.4%',  up: true,  bank: 'First Republic' },
+  { label: 'Savings',     number: '•••• 7392', value:  342800, icon: PiggyBank,  color: 'from-emerald-700 to-emerald-900', trend: '+5.1%',  up: true,  bank: 'Marcus by Goldman' },
+  { label: 'Investment',  number: '•••• 9156', value:  891200, icon: TrendingUp, color: 'from-indigo-700 to-indigo-900', trend: '+12.8%', up: true,  bank: 'Vanguard · Brokerage' },
+  { label: 'Credit Card', number: '•••• 3047', value:   -4230, icon: CreditCard, color: 'from-rose-700 to-rose-900',     trend: '-18.2%', up: false, bank: 'Amex Platinum' },
 ]
 
 const netWorthTrend = [
@@ -49,27 +50,27 @@ const netWorthTrend = [
 ]
 
 const incomeVsExpense = [
-  { label: 'Sep', value: 11200, color: '#14b8a6' },
-  { label: '', value: 8500, color: '#f87171' },
-  { label: 'Oct', value: 11800, color: '#14b8a6' },
-  { label: '', value: 8700, color: '#f87171' },
-  { label: 'Nov', value: 12000, color: '#14b8a6' },
-  { label: '', value: 8400, color: '#f87171' },
-  { label: 'Dec', value: 12200, color: '#14b8a6' },
-  { label: '', value: 8600, color: '#f87171' },
-  { label: 'Jan', value: 12400, color: '#14b8a6' },
-  { label: '', value: 8300, color: '#f87171' },
-  { label: 'Feb', value: 12450, color: '#14b8a6' },
-  { label: '', value: 8230, color: '#f87171' },
+  { label: 'Sep', value: 11200, color: '#4f46e5' },
+  { label: '', value: 8500, color: '#fb7185' },
+  { label: 'Oct', value: 11800, color: '#4f46e5' },
+  { label: '', value: 8700, color: '#fb7185' },
+  { label: 'Nov', value: 12000, color: '#4f46e5' },
+  { label: '', value: 8400, color: '#fb7185' },
+  { label: 'Dec', value: 12200, color: '#4f46e5' },
+  { label: '', value: 8600, color: '#fb7185' },
+  { label: 'Jan', value: 12400, color: '#4f46e5' },
+  { label: '', value: 8300, color: '#fb7185' },
+  { label: 'Feb', value: 12450, color: '#4f46e5' },
+  { label: '', value: 8230, color: '#fb7185' },
 ]
 
 const spendingCategories = [
-  { name: 'Housing', percent: 35, amount: 2878, color: '#6366f1' },
-  { name: 'Food', percent: 15, amount: 1235, color: '#14b8a6' },
-  { name: 'Transport', percent: 12, amount: 988, color: '#f59e0b' },
-  { name: 'Entertainment', percent: 8, amount: 658, color: '#ec4899' },
-  { name: 'Utilities', percent: 10, amount: 823, color: '#3b82f6' },
-  { name: 'Other', percent: 20, amount: 1648, color: '#94a3b8' },
+  { name: 'Housing',       percent: 35, amount: 2878, color: '#4338ca' },
+  { name: 'Food',          percent: 15, amount: 1235, color: '#0d9488' },
+  { name: 'Transport',     percent: 12, amount:  988, color: '#b45309' },
+  { name: 'Entertainment', percent:  8, amount:  658, color: '#be185d' },
+  { name: 'Utilities',     percent: 10, amount:  823, color: '#1d4ed8' },
+  { name: 'Other',         percent: 20, amount: 1648, color: '#64748b' },
 ]
 
 const recentTransactions = [
@@ -99,12 +100,12 @@ const fullTransactions = [
 ]
 
 const budgets = [
-  { name: 'Housing & Rent', icon: Home, spent: 2200, budget: 2200, color: 'bg-indigo-500' },
-  { name: 'Food & Groceries', icon: Utensils, spent: 680, budget: 800, color: 'bg-teal-500' },
-  { name: 'Transportation', icon: Car, spent: 420, budget: 400, color: 'bg-amber-500' },
-  { name: 'Entertainment', icon: Film, spent: 180, budget: 300, color: 'bg-pink-500' },
-  { name: 'Utilities & Bills', icon: Zap, spent: 250, budget: 280, color: 'bg-blue-500' },
-  { name: 'Travel & Vacation', icon: Plane, spent: 1200, budget: 500, color: 'bg-red-500' },
+  { name: 'Housing & Rent',    icon: Home,     spent: 2200, budget: 2200, color: 'bg-indigo-600' },
+  { name: 'Food & Groceries',  icon: Utensils, spent:  680, budget:  800, color: 'bg-teal-600' },
+  { name: 'Transportation',    icon: Car,      spent:  420, budget:  400, color: 'bg-amber-600' },
+  { name: 'Entertainment',     icon: Film,     spent:  180, budget:  300, color: 'bg-pink-600' },
+  { name: 'Utilities & Bills', icon: Zap,      spent:  250, budget:  280, color: 'bg-blue-600' },
+  { name: 'Travel & Vacation', icon: Plane,    spent: 1200, budget:  500, color: 'bg-rose-600' },
 ]
 
 const invoices = [
@@ -210,16 +211,33 @@ function App({ onNavigate }) {
       {/* ---- Sidebar ---- */}
       <aside className={`fixed left-0 top-0 h-full w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 z-40 transform transition-transform lg:translate-x-0 flex flex-col ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         {/* Logo */}
-        <div className="p-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+        <div className="px-5 py-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center shadow-lg shadow-teal-500/20">
-              <CircleDollarSign className="w-5 h-5 text-white" />
+            <div className="w-9 h-9 rounded-lg bg-slate-900 dark:bg-white text-white dark:text-slate-900 flex items-center justify-center shadow-sm">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5"><path d="M4 20V4h4l8 12V4h4v16h-4L8 8v12H4z" fill="currentColor"/></svg>
             </div>
-            <span className="text-lg font-bold font-display tracking-tight">FinanceHub</span>
+            <div className="flex flex-col leading-tight">
+              <span className="text-[15px] font-bold font-display tracking-tight">Northwind Capital</span>
+              <span className="text-[10px] font-medium uppercase tracking-widest text-slate-400 dark:text-slate-500">Private wealth</span>
+            </div>
           </div>
           <button onClick={() => setSidebarOpen(false)} className="lg:hidden p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
             <X className="w-5 h-5" />
           </button>
+        </div>
+
+        {/* Workspace chip */}
+        <div className="px-3 pt-3">
+          <div className="flex items-center gap-2.5 px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/30">
+            <div className="w-7 h-7 rounded-md bg-gradient-to-br from-indigo-600 to-indigo-800 flex items-center justify-center">
+              <Landmark className="w-3.5 h-3.5 text-white" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-semibold truncate">Morgan Family Office</p>
+              <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">4 entities · USD base</p>
+            </div>
+            <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
+          </div>
         </div>
 
         {/* Nav sections */}
@@ -234,7 +252,7 @@ function App({ onNavigate }) {
                     onClick={() => setActiveSidebar(id)}
                     className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                       activeSidebar === id
-                        ? 'bg-teal-50 dark:bg-teal-900/20 text-teal-700 dark:text-teal-400'
+                        ? 'bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-300'
                         : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
                     }`}
                   >
@@ -248,15 +266,29 @@ function App({ onNavigate }) {
           ))}
         </nav>
 
+        {/* Advisor card */}
+        <div className="mx-3 mb-3 rounded-xl border border-slate-200 dark:border-slate-800 bg-gradient-to-br from-slate-50 to-indigo-50/50 dark:from-slate-800/60 dark:to-indigo-950/30 p-3">
+          <div className="flex items-center gap-2.5 mb-2">
+            <img src="https://i.pravatar.cc/80?img=32" alt="" className="w-8 h-8 rounded-full object-cover ring-2 ring-white dark:ring-slate-900" />
+            <div className="min-w-0">
+              <p className="text-xs font-semibold truncate">Priya Natarajan</p>
+              <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate">Your advisor · CFA</p>
+            </div>
+          </div>
+          <button className="w-full text-[11px] font-semibold py-1.5 rounded-md bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:opacity-90 transition">
+            Schedule a review
+          </button>
+        </div>
+
         {/* User profile */}
         <div className="p-3 border-t border-slate-200 dark:border-slate-800">
           <div className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-teal-400 to-cyan-500 flex items-center justify-center">
-              <User className="w-4 h-4 text-white" />
-            </div>
+            <img src="https://i.pravatar.cc/80?img=5" alt="" className="w-8 h-8 rounded-full object-cover" />
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium truncate">Alex Morgan</p>
-              <p className="text-xs text-slate-500 dark:text-slate-400 truncate">alex@company.com</p>
+              <p className="text-sm font-medium truncate">Elena Moreno</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 truncate flex items-center gap-1">
+                <ShieldCheck className="w-3 h-3 text-emerald-500 flex-shrink-0" /> Verified client
+              </p>
             </div>
             <LogOut className="w-4 h-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 flex-shrink-0" />
           </div>
@@ -267,29 +299,85 @@ function App({ onNavigate }) {
       <div className="lg:pl-64">
         {/* Header */}
         <header className="sticky top-0 h-14 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800 flex items-center justify-between px-6 z-30">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 min-w-0">
             <button onClick={() => setSidebarOpen(true)} className="lg:hidden p-2 text-slate-600 dark:text-slate-400">
               <Menu className="w-5 h-5" />
             </button>
-            <h2 className="text-base font-semibold font-display hidden sm:block">Financial Dashboard</h2>
+            <div className="hidden sm:flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+              <span>Workspace</span>
+              <ChevronRight className="w-3 h-3" />
+              <span className="text-slate-900 dark:text-slate-100 font-medium">Morgan Family Office</span>
+              <ChevronRight className="w-3 h-3" />
+              <span className="text-slate-900 dark:text-slate-100 font-medium">Dashboard</span>
+            </div>
           </div>
           <div className="flex items-center gap-2">
+            <div className="hidden md:flex items-center gap-1.5 text-[11px] text-slate-500 dark:text-slate-400 mr-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span>Synced 2 min ago</span>
+            </div>
+            <button type="button" className="hidden md:inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-slate-200 dark:border-slate-800 text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+              <Globe className="w-3.5 h-3.5" />
+              USD
+            </button>
+            <button type="button" className="hidden md:inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md border border-slate-200 dark:border-slate-800 text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 transition">
+              <RefreshCw className="w-3.5 h-3.5" />
+              Refresh
+            </button>
             <Button variant="outline" size="sm" className="text-xs hidden sm:flex">
               <Download className="w-3.5 h-3.5 mr-1.5" /> Export
             </Button>
             <button className="relative p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg">
               <Bell className="w-5 h-5" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full" />
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full ring-2 ring-white dark:ring-slate-900" />
             </button>
           </div>
         </header>
 
         {/* Content */}
         <main className="p-6 space-y-6">
-          <div>
-            <h1 className="text-2xl font-bold font-display">Finance Dashboard</h1>
-            <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">Manage your finances, track spending, and monitor investments</p>
-          </div>
+          {/* Hero: portfolio summary */}
+          <section className="relative overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950 text-white p-6 lg:p-8 shadow-sm">
+            {/* decorative glow */}
+            <div className="pointer-events-none absolute -right-16 -top-16 w-80 h-80 rounded-full bg-indigo-500/20 blur-3xl" />
+            <div className="pointer-events-none absolute -left-10 bottom-0 w-64 h-64 rounded-full bg-emerald-500/10 blur-3xl" />
+            <div className="relative flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+              <div className="min-w-0">
+                <div className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-widest text-indigo-300/90 mb-3">
+                  <Sparkles className="w-3.5 h-3.5" />
+                  Q1 2026 · portfolio summary
+                </div>
+                <p className="text-sm text-slate-300/80">Total net worth</p>
+                <div className="flex items-baseline gap-3 mt-1">
+                  <h1 className="text-4xl lg:text-5xl font-bold font-display tracking-tight tabular-nums">$1,354,270.00</h1>
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 text-xs font-semibold">
+                    <ArrowUpRight className="w-3 h-3" />
+                    +14.8% YTD
+                  </span>
+                </div>
+                <p className="text-sm text-slate-400 mt-2">
+                  Good afternoon, Elena. Your portfolio is up <span className="text-emerald-300 font-medium">$178,320</span> since January.
+                </p>
+              </div>
+              <div className="grid grid-cols-3 gap-4 lg:gap-6 lg:min-w-[480px]">
+                <div>
+                  <p className="text-[11px] uppercase tracking-widest text-slate-400 font-semibold">Liquid</p>
+                  <p className="text-xl font-bold font-display tabular-nums mt-1">{fmtShort(467300)}</p>
+                  <p className="text-[11px] text-emerald-300 mt-0.5">+4.2%</p>
+                </div>
+                <div>
+                  <p className="text-[11px] uppercase tracking-widest text-slate-400 font-semibold">Invested</p>
+                  <p className="text-xl font-bold font-display tabular-nums mt-1">{fmtShort(891200)}</p>
+                  <p className="text-[11px] text-emerald-300 mt-0.5">+12.8%</p>
+                </div>
+                <div>
+                  <p className="text-[11px] uppercase tracking-widest text-slate-400 font-semibold">Obligations</p>
+                  <p className="text-xl font-bold font-display tabular-nums mt-1">{fmtShort(4230)}</p>
+                  <p className="text-[11px] text-rose-300 mt-0.5">Credit balance</p>
+                </div>
+              </div>
+            </div>
+          </section>
 
           {/* Main Tabs */}
           <Tabs tabs={mainTabs} active={activeTab} onChange={setActiveTab} />
@@ -300,27 +388,32 @@ function App({ onNavigate }) {
               {/* Account Balance Cards */}
               <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 {accountCards.map((acct) => (
-                  <Card key={acct.label} className="border-slate-200 dark:border-slate-800 hover:shadow-md transition-shadow overflow-hidden">
+                  <Card key={acct.label} className="group border-slate-200 dark:border-slate-800 hover:shadow-md hover:border-slate-300 dark:hover:border-slate-700 transition-all overflow-hidden">
                     <CardContent className="p-5">
-                      <div className="flex items-center justify-between mb-3">
-                        <div>
-                          <p className="text-sm text-slate-500 dark:text-slate-400">{acct.label}</p>
-                          <p className="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5">{acct.number}</p>
+                      <div className="flex items-start justify-between mb-4">
+                        <div className="min-w-0">
+                          <p className="text-[11px] uppercase tracking-wider font-semibold text-slate-400 dark:text-slate-500">{acct.label}</p>
+                          <p className="text-sm font-medium text-slate-700 dark:text-slate-300 mt-1 truncate">{acct.bank}</p>
+                          <p className="text-[11px] text-slate-400 dark:text-slate-500 font-mono mt-0.5">{acct.number}</p>
                         </div>
-                        <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${acct.color} flex items-center justify-center shadow-sm`}>
+                        <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${acct.color} flex items-center justify-center ring-1 ring-black/5 dark:ring-white/10`}>
                           <acct.icon className="w-5 h-5 text-white" />
                         </div>
                       </div>
-                      <p className="text-2xl font-bold font-display">{fmt(acct.value)}</p>
-                      <div className="flex items-center gap-1 mt-2">
-                        {acct.up ? (
-                          <ArrowUpRight className="w-3.5 h-3.5 text-emerald-500" />
-                        ) : (
-                          <ArrowDownRight className="w-3.5 h-3.5 text-red-500" />
-                        )}
-                        <span className={`text-xs font-medium ${acct.up ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-600 dark:text-red-400'}`}>
-                          {acct.trend} this month
-                        </span>
+                      <p className="text-2xl font-bold font-display tabular-nums tracking-tight">{fmt(acct.value)}</p>
+                      <div className="flex items-center justify-between mt-3 pt-3 border-t border-slate-100 dark:border-slate-800/70">
+                        <div className="flex items-center gap-1">
+                          {acct.up ? (
+                            <ArrowUpRight className="w-3.5 h-3.5 text-emerald-500" />
+                          ) : (
+                            <ArrowDownRight className="w-3.5 h-3.5 text-rose-500" />
+                          )}
+                          <span className={`text-xs font-semibold ${acct.up ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>
+                            {acct.trend}
+                          </span>
+                          <span className="text-[11px] text-slate-400 dark:text-slate-500">this month</span>
+                        </div>
+                        <ChevronRight className="w-4 h-4 text-slate-300 dark:text-slate-600 group-hover:text-slate-500 dark:group-hover:text-slate-400 transition-colors" />
                       </div>
                     </CardContent>
                   </Card>
@@ -347,7 +440,7 @@ function App({ onNavigate }) {
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <AreaChart data={netWorthTrend} height={140} color="#14b8a6" />
+                    <AreaChart data={netWorthTrend} height={140} color="#4f46e5" />
                   </CardContent>
                 </Card>
 
@@ -364,7 +457,7 @@ function App({ onNavigate }) {
                         max={totalBudget}
                         size={100}
                         strokeWidth={10}
-                        color="#14b8a6"
+                        color="#4f46e5"
                         trackColor="hsl(var(--muted))"
                         label={fmtShort(totalSpent)}
                         sublabel="of budget"
@@ -398,11 +491,11 @@ function App({ onNavigate }) {
                     </div>
                     <div className="flex items-center gap-4 text-xs">
                       <div className="flex items-center gap-1.5">
-                        <div className="w-3 h-3 rounded-sm bg-teal-500" />
+                        <div className="w-3 h-3 rounded-sm bg-indigo-600" />
                         <span className="text-slate-500 dark:text-slate-400">Income</span>
                       </div>
                       <div className="flex items-center gap-1.5">
-                        <div className="w-3 h-3 rounded-sm bg-red-400" />
+                        <div className="w-3 h-3 rounded-sm bg-rose-400" />
                         <span className="text-slate-500 dark:text-slate-400">Expenses</span>
                       </div>
                     </div>
@@ -498,7 +591,7 @@ function App({ onNavigate }) {
                 <Card className="border-slate-200 dark:border-slate-800">
                   <CardContent className="p-4">
                     <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-medium">Net Cash Flow</p>
-                    <p className="text-xl font-bold font-display text-teal-600 dark:text-teal-400 mt-1">+$6,033.58</p>
+                    <p className="text-xl font-bold font-display text-indigo-600 dark:text-indigo-400 mt-1">+$6,033.58</p>
                     <p className="text-xs text-slate-400 mt-1">Positive trend</p>
                   </CardContent>
                 </Card>
@@ -565,7 +658,7 @@ function App({ onNavigate }) {
                 <Card className="border-slate-200 dark:border-slate-800">
                   <CardContent className="p-4">
                     <p className="text-xs text-slate-500 dark:text-slate-400 uppercase tracking-wider font-medium">Total Spent</p>
-                    <p className={`text-xl font-bold font-display mt-1 ${totalSpent > totalBudget ? 'text-red-600 dark:text-red-400' : 'text-teal-600 dark:text-teal-400'}`}>
+                    <p className={`text-xl font-bold font-display mt-1 ${totalSpent > totalBudget ? 'text-rose-600 dark:text-rose-400' : 'text-indigo-600 dark:text-indigo-400'}`}>
                       {fmt(totalSpent)}
                     </p>
                     <p className="text-xs text-slate-400 mt-1">{Math.round((totalSpent / totalBudget) * 100)}% of budget used</p>
@@ -648,7 +741,7 @@ function App({ onNavigate }) {
                   <CardTitle className="font-display text-base">Overall Budget Progress</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <Progress value={totalSpent} max={totalBudget} size="lg" color={totalSpent > totalBudget ? 'bg-red-500' : 'bg-teal-500'} />
+                  <Progress value={totalSpent} max={totalBudget} size="lg" color={totalSpent > totalBudget ? 'bg-rose-500' : 'bg-indigo-600'} />
                   <div className="flex items-center justify-between mt-3 text-sm">
                     <span className="text-slate-500 dark:text-slate-400">
                       {fmt(totalSpent)} spent of {fmt(totalBudget)} budgeted
@@ -715,7 +808,7 @@ function App({ onNavigate }) {
                         {invoices.map((inv) => (
                           <tr key={inv.id} className="border-b border-slate-100 dark:border-slate-800/50 hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors">
                             <td className="py-3 px-4">
-                              <span className="font-mono text-xs font-medium text-teal-600 dark:text-teal-400">{inv.id}</span>
+                              <span className="font-mono text-xs font-medium text-indigo-600 dark:text-indigo-400">{inv.id}</span>
                             </td>
                             <td className="py-3 px-4 font-medium">{inv.client}</td>
                             <td className="py-3 px-4 text-right font-semibold">{fmt(inv.amount)}</td>
@@ -932,7 +1025,7 @@ function App({ onNavigate }) {
                       max={100}
                       size={72}
                       strokeWidth={7}
-                      color="#14b8a6"
+                      color="#4f46e5"
                       trackColor="hsl(var(--muted))"
                       label="71.5%"
                       className="mx-auto mb-2"
@@ -948,7 +1041,7 @@ function App({ onNavigate }) {
                       max={100}
                       size={72}
                       strokeWidth={7}
-                      color="#6366f1"
+                      color="#0d9488"
                       trackColor="hsl(var(--muted))"
                       label="24.2%"
                       className="mx-auto mb-2"
