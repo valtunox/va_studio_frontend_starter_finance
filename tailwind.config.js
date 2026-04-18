@@ -4,7 +4,7 @@ export default {
   content: [
     './index.html',
     './src/**/*.{js,ts,jsx,tsx}',
-    './templates/**/*.{js,ts,jsx,tsx}',
+    './templates/finance/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
     extend: {
